@@ -13,6 +13,13 @@ output:
 bibliography: Ref1.bib  
 ---
 
+<style type="text/css">
+body{
+  font-family: Arial;
+  font-size: 12pt;
+}
+</style>
+
 ```{r klippy, echo=FALSE, include=TRUE}
 klippy::klippy(position = c('top', 'right'), color = 'darkred', tooltip_message = 'Click to copy')
 ```
@@ -145,6 +152,10 @@ Con esto, pretendemos fijar un perfil de estudiante: aquel estudiante recién eg
 
 # Resultados
 
+**Figure 2**
+
+*Intended analysis*
+![image2](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Intended%20analysis.png?raw=true)
 
 
 # Working Directory
