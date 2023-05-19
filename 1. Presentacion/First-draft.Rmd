@@ -38,9 +38,110 @@ biblio <- bibtex::read.bib("Ref1.bib")
 
 ## Datos
 
+```{r, include=FALSE}
+library(dplyr)
+
+# Database
+dat <- readr::read_delim("C:/Users/geral/OneDrive - University of Iowa/PhD portfolio/1.-Research/8. Multivariate analysis of admission progression/2. Database/ADM2022.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+# Data cleaning
+
+## Academic filters
+dat1 <- dat %>% filter(P166  %in% c('310', '410', '510', '610','710','810','910') & # students who learned from the regular curriculum
+                 P015 == 2021 & # students graduated in 2021
+                 P083 > 0 & P084 > 0 & P085 > 0 & P086 > 0) # students with valid scores in the academic factors
+
+# Sample
+dat2 <- dat1[,c('P034_1', # per capita income
+        'P037', # Dad's education
+        'P038', # Mom's education
+        'P098', # Regular application status
+        'P083', # NEM
+        'P084', # RKG
+        'P085', # LANG
+        'P086',# MATH
+         'P100',
+         'P105',
+         'P110',
+         'P115',
+         'P120',
+         'P125',
+         'P130',
+         'P135',
+         'P140',
+         'P145')] 
+
+dat3 <- dat2 %>% mutate(
+  P034_1 = ifelse(P034_1 == 99, NA, P034_1),
+  Q_FAM_INC = recode(P034_1,
+                     '1' = 1,'2' = 1,
+                     '3' = 2,'4' = 2,
+                     '5' = 3,'6' = 3,
+                     '7' = 4,'8' = 4,
+                     '9' = 5,'10' = 5),
+  Q2 = ifelse(Q_FAM_INC == 2,1,0),
+  Q3 = ifelse(Q_FAM_INC == 3,1,0),
+  Q4 = ifelse(Q_FAM_INC == 4,1,0),
+  Q5 = ifelse(Q_FAM_INC == 5,1,0),
+  
+  P037_1 = ifelse(P037 == 13 | P037 == 99, -1, P037), # father
+  P038_1 = ifelse(P038 == 13 | P038 == 99, -1, P038), # mother
+  FIRST_G = ifelse(P037_1 > 9 | P038_1 > 9, 0, 1),
+  FIRST_G = ifelse(P037_1 == -1 & P038_1 == -1, NA, FIRST_G),
+  ADM = ifelse(is.na(P098),0,
+               ifelse(P098 == 'C', 1,4)),
+  SEL = ifelse(ADM == 4 &
+                 (P100 == 24 |
+                 P105 == 24 |
+                 P110 == 24 |
+                 P115 == 24 |
+                 P120 == 24 |
+                 P125 == 24 |
+                 P130 == 24 |
+                 P135 == 24 |
+                 P140 == 24 |
+                 P145 == 24), 1,0),
+  SEL2 = ifelse(ADM == 4 & SEL == 1, 1,
+               ifelse(ADM == 4 & SEL == 0, 0, NA)),
+  ADM2 = ifelse(ADM == 4 & SEL2 == 0,2,
+                       ifelse(ADM == 4 & SEL2 == 1,3, ADM)))
+
+# ADM 1 = did not apply;
+# 2 = none of his/her applications met the minimum requirements;
+# 3 = applied but was not selected;
+# 4 = applied and was selected
+
+dat4 <- data.frame(dat3[,c("P083","P084","P085","P086","Q2","Q3","Q4","Q5","FIRST_G","ADM2")])
+colnames(dat4) <- c("NEM","RKG","LANG","MATH","Q2","Q3","Q4","Q5","FIRST_G","ADM")
+dat4$ADM <- recode(dat4$ADM, '3' = 2, '2' = 3)
+dat4 <- dat4 %>% mutate(
+  NEM = (NEM - 550)/100,
+  RKG = (RKG - 550)/100,
+  LANG = (LANG - 550)/100,
+  MATH = (MATH - 550)/100)
+dat3_5 <- data.frame(dat3[,c(1:8,19:30)])
+```
+
+```{r}
+head(dat3_5,10)
+head(dat4,10)
+```
+
 ## Muestra
 
+Originalmente, existen 281.457 registros en la base de datos del proceso de admisión 2022 provista por el DEMRE. Sin embargo, de acuerdo con el objetivo de investigación, se aplicaron 3 filtros a la base de datos original:
+
+1. Egresados/as de enseñanza regular (`n = 258.728`)
+2. Graduados/as en 2021 (`n = 172.346`)
+3. Puntajes válidos en los factores académicos de selección (`n = 150.811`)
+
+Con esto, pretendemos fijar un perfil de estudiante: aquel estudiante recién egresado de la educación secundaria con cuyos contenidos se diseñan los exámenes de admisión y que tiene los puntajes necesarios para la construcción del puntaje ponderado que se utiliza para postular a cada programa universitario.
+
 ## Procedimiento
+
+
+
+![imagen](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
 
 # Resultados
 
