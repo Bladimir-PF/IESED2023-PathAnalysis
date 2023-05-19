@@ -1,0 +1,52 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MPLUS ONLY READS 90 CHARACTERS ACROSS !!!!!!!!!!!!!!!!!!
+
+TITLE:  Mplus Example 6a Single-Group Path Model with Indirect Effects
+DATA:   FILE = Mindful.csv;     ! Can just list file name if data are in same folder
+        FORMAT = free;          ! FREE (default) or FIXED format
+        TYPE = individual;      ! Individual (default) or matrix data as input
+VARIABLE:
+! Names of all variables in data set 
+  NAMES = ID SexMW MindC Intern Extern Hostile Benev Warmth;
+! Names of all variables in model
+  USEVARIABLES = MindC Intern Extern Hostile Benev Warmth;
+! Missing data indicator 
+  MISSING = ALL(-999);
+
+ANALYSIS:   TYPE = GENERAL;          ! For path models
+            ESTIMATOR = MLR;         ! Robust ML (cannot use with bootstrapping)
+            !BOOTSTRAP IS 1000;      ! Bootstrapping for indirect effects
+OUTPUT:     STDYX;                   ! Standardized solution
+            !MODINDICES (3.84);      ! Cheat codes to improve model fit (not with CONSTRAINT)
+            CINTERVAL;               ! Confidence interval for indirect effects
+            !CINTERVAL(BCBOOTSTRAP); ! Bootstrap CI for indirect effects (not with MLR)
+
+! Model code: ON = Y ON X, WITH = covariance
+! Labels in parentheses (can be used to name constraints between groups)
+MODEL:
+! Bring X into the likelihood by estimating its mean and variance in empty model
+  [MindC] (Xint); MindC (Xvar);
+! Intercepts and residual variances for other variables
+  [Intern Extern Hostile Benev Warmth] (M1int M2int M3int M4int Yint);
+   Intern Extern Hostile Benev Warmth  (M1var M2var M3var M4var Yvar);
+! Direct MindC --> Warmth
+  Warmth ON MindC (XtoY);
+! Left side of model
+  Intern Extern Hostile Benev  ON MindC (XtoM1 XtoM2 XtoM3 XtoM4);
+! Right side of model
+  Warmth ON Intern Extern Hostile Benev (M1toY M2toY M3toY M4toY);
+! All possible residual covariances among mediator variables (not labeled)
+  Intern Extern Hostile Benev WITH Intern Extern Hostile Benev;
+
+! First list newly created parameters to be defined below
+MODEL CONSTRAINT:
+  NEW (XtoM1toY XtoM2toY XtoM3toY XtoM4toY totXtoY totInd);
+! Then define indirect effects, total indirect+direct, and total indirect effects
+! (as done for you here using MODEL INDIRECT below, which is not always possible to use)
+  XtoM1toY = XtoM1*M1toY; XtoM2toY = XtoM2*M2toY; 
+  XtoM3toY = XtoM3*M3toY; XtoM4toY = XtoM4*M4toY;
+  totInd   = XtoM1toY + XtoM2toY + XtoM3toY + XtoM4toY;
+  totXtoY  = XtoM1toY + XtoM2toY + XtoM3toY + XtoM4toY + XtoY;
+
+! Get all indirect and total effects between Y IND X
+MODEL INDIRECT: ! Only available for MVN outcomes
+  Warmth IND MindC;

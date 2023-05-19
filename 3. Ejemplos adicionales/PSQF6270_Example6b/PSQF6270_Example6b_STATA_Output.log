@@ -1,0 +1,303 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  Example6b
+       log:  C:\Dropbox\22_PSQF6270\PSQF6270_Example6b\PSQF6270_Example6b_STATA_Output.log
+  log type:  text
+ opened on:  22 Apr 2022, 16:33:07
+
+.    
+. * /// means continue the command + comment
+> *  // means comment only
+. 
+. display "STATA Path Model for Example 6b"
+STATA Path Model for Example 6b
+
+. display "Results do not match Mplus because of missing data"
+Results do not match Mplus because of missing data
+
+. gsem                                                        ///
+> (speed2@1 acc2@1 <-RandInt)                                 /// Random intercept factor for binary outcome covariance
+> (simfac limit4 speed2 acc2 RandInt@0 <- _cons)              /// All outcome intercepts estimated by default
+> (simfac <- sex age75 visfac zufov1 zufov2 zufov3 dscan)                        /// X1-X7        to normal M1
+> (limit4 <- sex age75 visfac zufov1 zufov2 zufov3 dscan simfac)                 /// X1-X7, M1    to normal M2
+> (acc2   <- sex age75 visfac zufov1 zufov2 zufov3 dscan simfac limit4, logit)   /// X1-X7, M1-M2 to binary Y1
+> (speed2 <- sex age75 visfac zufov1 zufov2 zufov3 dscan simfac limit4, logit),  /// X1-X7, M1-M2 to binary Y2
+> var(e.simfac e.limit4 e.RandInt)           /// All residual variances estimated (by default)  
+> method(ml) vce(robust)                                      // Equation-wise ML, robust SEs
+
+Fitting fixed-effects model:
+
+Iteration 0:   log likelihood = -287.09709  
+Iteration 1:   log likelihood = -280.68667  
+Iteration 2:   log likelihood =  -279.9868  
+Iteration 3:   log likelihood = -279.95498  
+Iteration 4:   log likelihood =  -279.9549  
+Iteration 5:   log likelihood =  -279.9549  
+
+Refining starting values:
+
+Grid node 0:   log likelihood =  -281.6724
+
+Fitting full model:
+
+Iteration 0:   log pseudolikelihood =  -281.6724  (not concave)
+Iteration 1:   log pseudolikelihood = -280.19968  (not concave)
+Iteration 2:   log pseudolikelihood = -280.11194  (not concave)
+Iteration 3:   log pseudolikelihood = -280.07683  (not concave)
+Iteration 4:   log pseudolikelihood = -280.06278  (not concave)
+Iteration 5:   log pseudolikelihood = -280.05716  (not concave)
+Iteration 6:   log pseudolikelihood = -280.05267  (not concave)
+Iteration 7:   log pseudolikelihood = -280.05177  (not concave)
+Iteration 8:   log pseudolikelihood = -280.05172  (not concave)
+Iteration 9:   log pseudolikelihood =  -280.0517  (not concave)
+Iteration 10:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 11:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 12:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 13:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 14:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 15:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 16:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 17:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 18:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 19:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 20:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 21:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 22:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 23:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 24:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 25:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 26:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 27:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 28:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 29:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 30:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 31:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 32:  log pseudolikelihood = -280.05169  (not concave)
+Iteration 33:  log pseudolikelihood = -280.05169  
+Iteration 34:  log pseudolikelihood = -280.05169  (backed up)
+Iteration 35:  log pseudolikelihood = -280.05167  (backed up)
+Iteration 36:  log pseudolikelihood = -280.05162  (backed up)
+Iteration 37:  log pseudolikelihood = -280.05157  (backed up)
+Iteration 38:  log pseudolikelihood = -280.05148  (not concave)
+Iteration 39:  log pseudolikelihood = -280.05147  (not concave)
+Iteration 40:  log pseudolikelihood = -280.05146  (not concave)
+Iteration 41:  log pseudolikelihood = -280.05137  (not concave)
+Iteration 42:  log pseudolikelihood = -280.05123  (not concave)
+Iteration 43:  log pseudolikelihood = -280.05111  
+Iteration 44:  log pseudolikelihood = -280.04526  
+Iteration 45:  log pseudolikelihood = -280.03976  (not concave)
+Iteration 46:  log pseudolikelihood = -280.03962  (not concave)
+Iteration 47:  log pseudolikelihood = -280.03875  (not concave)
+Iteration 48:  log pseudolikelihood = -280.03735  (not concave)
+Iteration 49:  log pseudolikelihood = -280.03295  
+Iteration 50:  log pseudolikelihood = -279.95504  
+Iteration 51:  log pseudolikelihood =  -279.9549  
+Iteration 52:  log pseudolikelihood =  -279.9549  
+
+Generalized structural equation model           Number of obs     =         97
+
+Response       : speed2                         Number of obs     =         94
+Family         : Bernoulli
+Link           : logit
+
+Response       : acc2                           Number of obs     =         95
+Family         : Bernoulli
+Link           : logit
+
+Response       : simfac                         Number of obs     =         97
+Family         : Gaussian
+Link           : identity
+
+Response       : limit4                         Number of obs     =         95
+Family         : Gaussian
+Link           : identity
+
+Log pseudolikelihood =  -279.9549
+
+ ( 1)  [speed2]RandInt = 1
+ ( 2)  [acc2]RandInt = 1
+-------------------------------------------------------------------------------
+              |               Robust
+              |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+speed2 <-     |
+          sex |  -1.557061   .7879779    -1.98   0.048    -3.101469   -.0126526
+        age75 |  -.0546159   .0525276    -1.04   0.298    -.1575682    .0483363
+       visfac |  -.1502139   .3466185    -0.43   0.665    -.8295736    .5291458
+       zufov1 |   -.535635   .4797671    -1.12   0.264    -1.475961    .4046912
+       zufov2 |  -.3621424   .5854345    -0.62   0.536    -1.509573    .7852881
+       zufov3 |  -1.123435   .3804919    -2.95   0.003    -1.869185   -.3776842
+        dscan |   1.072291   .5491542     1.95   0.051    -.0040309    2.148614
+       simfac |  -.2707209   .6837361    -0.40   0.692    -1.610819    1.069377
+       limit4 |  -.3472817   .4811236    -0.72   0.470    -1.290267    .5957032
+      RandInt |          1  (constrained)
+        _cons |  -1.441396   .4920705    -2.93   0.003    -2.405836   -.4769552
+--------------+----------------------------------------------------------------
+acc2 <-       |
+          sex |  -.7558823   .6830102    -1.11   0.268    -2.094558     .582793
+        age75 |  -.1174961    .085126    -1.38   0.168    -.2843399    .0493477
+       visfac |   .4131038   .2933548     1.41   0.159     -.161861    .9880685
+       zufov1 |  -1.670182    1.45702    -1.15   0.252    -4.525888    1.185524
+       zufov2 |  -.7274944   .3456611    -2.10   0.035    -1.404978    -.050011
+       zufov3 |   -.082022   .5071776    -0.16   0.872    -1.076072    .9120279
+        dscan |  -.5146466   .3802143    -1.35   0.176    -1.259853    .2305598
+       simfac |   1.795184   .8688709     2.07   0.039     .0922284     3.49814
+       limit4 |  -.9255548   .6167974    -1.50   0.133    -2.134456     .283346
+      RandInt |          1  (constrained)
+        _cons |  -3.091845   1.068584    -2.89   0.004    -5.186231   -.9974597
+--------------+----------------------------------------------------------------
+simfac <-     |
+          sex |   .1274706    .137288     0.93   0.353    -.1416089    .3965501
+        age75 |  -.0081964   .0166646    -0.49   0.623    -.0408585    .0244656
+       visfac |  -.0621605   .0869903    -0.71   0.475    -.2326583    .1083373
+       zufov1 |   .0095013   .1016697     0.09   0.926    -.1897675    .2087702
+       zufov2 |    .180878   .1035175     1.75   0.081    -.0220126    .3837687
+       zufov3 |   .1043617   .1018883     1.02   0.306    -.0953357    .3040592
+        dscan |   .2191596   .0996074     2.20   0.028     .0239328    .4143865
+        _cons |  -.0972922   .1053367    -0.92   0.356    -.3037482    .1091639
+--------------+----------------------------------------------------------------
+limit4 <-     |
+       simfac |   .0179388   .1506128     0.12   0.905    -.2772568    .3131344
+          sex |   .1759188   .2057114     0.86   0.392    -.2272682    .5791057
+        age75 |  -.0034281   .0230333    -0.15   0.882    -.0485726    .0417163
+       visfac |   .0148541   .1110292     0.13   0.894    -.2027591    .2324674
+       zufov1 |   .1181027    .131899     0.90   0.371    -.1404145    .3766199
+       zufov2 |   .1511188    .134478     1.12   0.261    -.1124532    .4146907
+       zufov3 |  -.1373689   .1355998    -1.01   0.311    -.4031396    .1284018
+        dscan |   .2287724   .1315016     1.74   0.082    -.0289659    .4865108
+        _cons |   .1419225   .1618459     0.88   0.381    -.1752896    .4591347
+--------------+----------------------------------------------------------------
+var(e.RandInt)|   1.18e-32   1.73e-32                      6.62e-34    2.09e-31
+--------------+----------------------------------------------------------------
+ var(e.simfac)|   .4618697   .0610618                      .3564395    .5984849
+ var(e.limit4)|   .8334947   .1121721                      .6402473     1.08507
+-------------------------------------------------------------------------------
+
+. gsem, coeflegend                            // Print parameter labels, too (to use in lincom) 
+
+Generalized structural equation model           Number of obs     =         97
+
+Response       : speed2                         Number of obs     =         94
+Family         : Bernoulli
+Link           : logit
+
+Response       : acc2                           Number of obs     =         95
+Family         : Bernoulli
+Link           : logit
+
+Response       : simfac                         Number of obs     =         97
+Family         : Gaussian
+Link           : identity
+
+Response       : limit4                         Number of obs     =         95
+Family         : Gaussian
+Link           : identity
+
+Log pseudolikelihood =  -279.9549
+
+ ( 1)  [speed2]RandInt = 1
+ ( 2)  [acc2]RandInt = 1
+-------------------------------------------------------------------------------
+              |      Coef.  Legend
+--------------+----------------------------------------------------------------
+speed2 <-     |
+          sex |  -1.557061  _b[speed2:sex]
+        age75 |  -.0546159  _b[speed2:age75]
+       visfac |  -.1502139  _b[speed2:visfac]
+       zufov1 |   -.535635  _b[speed2:zufov1]
+       zufov2 |  -.3621424  _b[speed2:zufov2]
+       zufov3 |  -1.123435  _b[speed2:zufov3]
+        dscan |   1.072291  _b[speed2:dscan]
+       simfac |  -.2707209  _b[speed2:simfac]
+       limit4 |  -.3472817  _b[speed2:limit4]
+      RandInt |          1  _b[speed2:RandInt]
+        _cons |  -1.441396  _b[speed2:_cons]
+--------------+----------------------------------------------------------------
+acc2 <-       |
+          sex |  -.7558823  _b[acc2:sex]
+        age75 |  -.1174961  _b[acc2:age75]
+       visfac |   .4131038  _b[acc2:visfac]
+       zufov1 |  -1.670182  _b[acc2:zufov1]
+       zufov2 |  -.7274944  _b[acc2:zufov2]
+       zufov3 |   -.082022  _b[acc2:zufov3]
+        dscan |  -.5146466  _b[acc2:dscan]
+       simfac |   1.795184  _b[acc2:simfac]
+       limit4 |  -.9255548  _b[acc2:limit4]
+      RandInt |          1  _b[acc2:RandInt]
+        _cons |  -3.091845  _b[acc2:_cons]
+--------------+----------------------------------------------------------------
+simfac <-     |
+          sex |   .1274706  _b[simfac:sex]
+        age75 |  -.0081964  _b[simfac:age75]
+       visfac |  -.0621605  _b[simfac:visfac]
+       zufov1 |   .0095013  _b[simfac:zufov1]
+       zufov2 |    .180878  _b[simfac:zufov2]
+       zufov3 |   .1043617  _b[simfac:zufov3]
+        dscan |   .2191596  _b[simfac:dscan]
+        _cons |  -.0972922  _b[simfac:_cons]
+--------------+----------------------------------------------------------------
+limit4 <-     |
+       simfac |   .0179388  _b[limit4:simfac]
+          sex |   .1759188  _b[limit4:sex]
+        age75 |  -.0034281  _b[limit4:age75]
+       visfac |   .0148541  _b[limit4:visfac]
+       zufov1 |   .1181027  _b[limit4:zufov1]
+       zufov2 |   .1511188  _b[limit4:zufov2]
+       zufov3 |  -.1373689  _b[limit4:zufov3]
+        dscan |   .2287724  _b[limit4:dscan]
+        _cons |   .1419225  _b[limit4:_cons]
+--------------+----------------------------------------------------------------
+var(e.RandInt)|   1.18e-32  _b[var(e.RandInt):_cons]
+--------------+----------------------------------------------------------------
+ var(e.simfac)|   .4618697  _b[var(e.simfac):_cons]
+ var(e.limit4)|   .8334947  _b[var(e.limit4):_cons]
+-------------------------------------------------------------------------------
+
+. nlcom _b[simfac:dscan]*_b[acc2:simfac]      // Indirect effect: dscan --> sim --> acc
+
+       _nl_1:  _b[simfac:dscan]*_b[acc2:simfac]
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _nl_1 |   .3934319   .2507519     1.57   0.117    -.0980329    .8848967
+------------------------------------------------------------------------------
+
+. estat eform speed2 acc2                     // Get odds ratios for binary outcomes
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+speed2       |
+         sex |   .2107546   .1660699    -1.98   0.048     .0449831    .9874271
+       age75 |   .9468487   .0497357    -1.04   0.298     .8542185    1.049524
+      visfac |   .8605239   .2982735    -0.43   0.665     .4362353    1.697482
+      zufov1 |   .5852975   .2808065    -1.12   0.264     .2285589     1.49884
+      zufov2 |   .6961832   .4075697    -0.62   0.536     .2210044    2.193039
+      zufov3 |   .3251611   .1237212    -2.95   0.003     .1542493     .685447
+       dscan |   2.922068   1.604666     1.95   0.051     .9959772    8.572967
+      simfac |   .7628294    .521574    -0.40   0.692      .199724    2.913565
+      limit4 |   .7066062   .3399649    -0.72   0.470     .2751974    1.814306
+     RandInt |   2.718282          .        .       .            .           .
+       _cons |   .2365973   .1164226    -2.93   0.003     .0901901    .6206703
+-------------+----------------------------------------------------------------
+acc2         |
+         sex |   .4695961   .3207389    -1.11   0.268     .1231247    1.791034
+       age75 |    .889144   .0756892    -1.38   0.168     .7525108    1.050586
+      visfac |   1.511502   .4434063     1.41   0.159     .8505594    2.686041
+      zufov1 |   .1882128   .2742298    -1.15   0.252     .0108251    3.272402
+      zufov2 |    .483118   .1669951    -2.10   0.035     .2453725     .951219
+      zufov3 |   .9212517   .4672383    -0.16   0.872     .3409321    2.489366
+       dscan |   .5977118   .2272586    -1.35   0.176     .2836958    1.259305
+      simfac |   6.020583    5.23111     2.07   0.039     1.096615    33.05391
+      limit4 |   .3963115   .2444439    -1.50   0.133      .118309    1.327564
+     RandInt |   2.718282          .        .       .            .           .
+       _cons |   .0454181    .048533    -2.89   0.004      .005593    .3688152
+------------------------------------------------------------------------------
+
+. 
+. // Close external file of saved results 
+. log close Example6b
+      name:  Example6b
+       log:  C:\Dropbox\22_PSQF6270\PSQF6270_Example6b\PSQF6270_Example6b_STATA_Output.log
+  log type:  text
+ closed on:  22 Apr 2022, 16:33:11
+------------------------------------------------------------------------------------------------------------------------------------------------------

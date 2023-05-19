@@ -1,0 +1,54 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!! Mplus Lines Cannot Exceed 90 Characters !!!!!!!!!!!!!!!!!!!!!
+TITLE:  Example 6b: Mplus Path Analysis for Dissertation Follow-up
+DATA:   FILE = driver.csv;      ! Can just list file name if in same folder;
+        FORMAT = free;          ! FREE (default) or FIXED format;
+        TYPE = individual;      ! Individual (default) or matrix data as input;
+VARIABLE:
+! List of ALL variables in original wide data file, in order;
+! Mplus names must use 8 characters or fewer (so rename as needed);
+  NAMES = PartID sex age75 cs_1_5 cs_3 cs_6 cs_12 cs_18 far near 
+	      zufov1 zufov2 zufov3 Dscan lane da_task crash stop speed time
+	      simfac part visfac attfac limit4 ticket2 speed2 follow attr 
+          nacc2 jacc2 jacc20 acc2;
+! List of ALL variables used in model;
+  USEVARIABLE = sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac
+                limit4 speed2 acc2;                     
+! Missing data identifier;
+  MISSING = ALL (-999);
+! Select only follow-up cases;
+  USEOBS = follow EQ 1;
+! Categorical outcomes;
+  CATEGORICAL = acc2 speed2; 
+
+ANALYSIS: LINK = LOGIT;                    ! Link function for categorical outcomes;
+          ESTIMATOR = MLR;                 ! Robust full-information maximum likelihood;
+          INTEGRATION = MONTECARLO(1000);  ! Mplus required (#samples);
+OUTPUT:   CINTERVAL;                       ! Print confidence intervals;
+          STDYX;                           ! Print fully standardized solution, too;                                                
+          SAMPSTAT;                        ! Print descriptive statistics;
+
+MODEL: ! * --> Estimated parameter (all listed below for clarity); 
+
+! Outcome intercepts (for continuous variables);
+  [simfac* limit4*];  
+! Outcome thresholds (for binary variables);
+  [speed2$1* acc2$1*];
+
+! Regressions: y outcomes ON x predictors (label to do math on later, * implied);
+  simfac ON sex age75 visfac zufov1 zufov2 zufov3 Dscan               (sim1-sim7);
+  limit4 ON sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac        (lim1-lim8);
+  acc2   ON sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac limit4 (acc1-acc9);
+  speed2 ON sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac limit4 (spd1-spd9);
+
+! Estimated residual variances for continuous outcomes;
+  simfac* limit4*;  
+
+! Random intercept factor for binary outcome covariance;
+  RandInt BY speed2@1 acc2@1;
+  [RandInt@0]; ! Fix fixed intercept to 0;
+   RandInt*;   ! Estimate random intercept variance;
+
+MODEL CONSTRAINT:         ! Like ESTIMATE in SAS or LINCOM in STATA;  
+  NEW(DStoAcc);           ! List names of estimated effects on NEW;
+  DStoAcc = sim7 * acc8;  ! Indirect effect of Dscan --> Sim --> Acc;
+

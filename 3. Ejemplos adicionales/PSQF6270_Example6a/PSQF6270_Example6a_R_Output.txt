@@ -1,0 +1,574 @@
+> print("R Single-Group Path Model with Indirect Effects using Robust FIML and Standard Errors")
+[1] "R Single-Group Path Model with Indirect Effects using Robust FIML and Standard Errors"
+> SyntaxSingle = "\n# Means/Intercepts and Variances/Residual Variances (labels)\n  MindC   ~ (Xint)*1;  MindC   ~~ (Xvar)*MindC;\n  Intern  ~ (M1int)*1; Intern  ~~ (M1var)*Intern; \n  Extern  ~ (M2int)*1; Extern  ~~ (M2var)*Extern;\n  Hostile ~ (M3int)*1; Hostile ~~ (M3var)*Hostile;\n  Benev   ~ (M4int)*1; Benev   ~~ (M4var)*Benev;\n  Warmth  ~ (Yint)*1;  Warmth  ~~ (Yvar)*Warmth;\n# Direct MindC --> Warmth\n  Warmth ~ (XtoY)*MindC\n# Left side of model\n  Intern  ~ (XtoM1)*MindC\n  Extern  ~ (XtoM2)*MindC\n  Hostile ~ (XtoM3)*MindC\n  Benev   ~ (XtoM4)*MindC\n# Right side of model\n  Warmth ~ (M1toY)*Intern + (M2toY)*Extern + (M3toY)*Hostile + (M4toY)*Benev\n# Residual Covariances\n  Intern  ~~ (Cov1)*Extern  + (Cov2)*Hostile + (Cov3)*Benev\n  Extern  ~~ (Cov4)*Hostile + (Cov5)*Benev\n  Hostile ~~ (Cov6)*Benev\n# Indirect effects, total indirect+direct, and total indirect effects\n  XtoM1toY := XtoM1*M1toY; XtoM2toY := XtoM2*M2toY\n  XtoM3toY := XtoM3*M3toY; XtoM4toY := XtoM4*M4toY\n  totXtoY  := XtoM1*M1toY + XtoM2*M2toY + XtoM3*M3toY + XtoM4*M4toY + XtoY\n  totInd   := XtoM1*M1toY + XtoM2*M2toY + XtoM3*M3toY + XtoM4*M4toY\n"
+> ModelSingle = lavaan(data = Mindful, model = SyntaxSingle, estimator = "MLR", 
++ mimic = "mplus")
+> summary(ModelSingle, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+lavaan 0.6.13 ended normally after 55 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        27
+
+  Number of observations                           653
+  Number of missing patterns                         3
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 0.000       0.000
+  Degrees of freedom                                 0           0
+
+Model Test Baseline Model:
+
+  Test statistic                               439.601     396.087
+  Degrees of freedom                                15          15
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.110
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    1.000       1.000
+  Tucker-Lewis Index (TLI)                       1.000       1.000
+                                                                  
+  Robust Comparative Fit Index (CFI)                         1.000
+  Robust Tucker-Lewis Index (TLI)                            1.000
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)              -5410.773   -5410.773
+  Loglikelihood unrestricted model (H1)      -5410.773   -5410.773
+                                                                  
+  Akaike (AIC)                               10875.545   10875.545
+  Bayesian (BIC)                             10996.548   10996.548
+  Sample-size adjusted Bayesian (SABIC)      10910.823   10910.823
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.000          NA
+  90 Percent confidence interval - lower         0.000          NA
+  90 Percent confidence interval - upper         0.000          NA
+  P-value H_0: RMSEA <= 0.050                       NA          NA
+  P-value H_0: RMSEA >= 0.080                       NA          NA
+                                                                  
+  Robust RMSEA                                               0.000
+  90 Percent confidence interval - lower                     0.000
+  90 Percent confidence interval - upper                     0.000
+  P-value H_0: Robust RMSEA <= 0.050                            NA
+  P-value H_0: Robust RMSEA >= 0.080                            NA
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.000       0.000
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  Warmth ~                                                              
+    MindC   (XtoY)   -0.012    0.213   -0.056    0.955   -0.012   -0.002
+  Intern ~                                                              
+    MindC   (XtM1)    0.335    0.120    2.785    0.005    0.335    0.112
+  Extern ~                                                              
+    MindC   (XtM2)    0.041    0.105    0.392    0.695    0.041    0.015
+  Hostile ~                                                             
+    MindC   (XtM3)   -0.196    0.071   -2.750    0.006   -0.196   -0.103
+  Benev ~                                                               
+    MindC   (XtM4)   -0.052    0.065   -0.801    0.423   -0.052   -0.029
+  Warmth ~                                                              
+    Intern  (M1tY)    0.563    0.075    7.478    0.000    0.563    0.307
+    Extern  (M2tY)    0.058    0.074    0.777    0.437    0.058    0.029
+    Hostile (M3tY)   -0.813    0.111   -7.343    0.000   -0.813   -0.282
+    Benev   (M4tY)   -0.212    0.110   -1.928    0.054   -0.212   -0.069
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+ .Intern ~~                                                             
+   .Extern  (Cov1)    0.602    0.077    7.850    0.000    0.602    0.377
+   .Hostile (Cov2)   -0.374    0.052   -7.128    0.000   -0.374   -0.339
+   .Benev   (Cov3)   -0.007    0.045   -0.149    0.881   -0.007   -0.006
+ .Extern ~~                                                             
+   .Hostile (Cov4)    0.036    0.045    0.815    0.415    0.036    0.036
+   .Benev   (Cov5)    0.147    0.043    3.394    0.001    0.147    0.153
+ .Hostile ~~                                                            
+   .Benev   (Cov6)    0.112    0.031    3.654    0.000    0.112    0.169
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (Xint)    0.835    0.017   48.266    0.000    0.835    1.889
+   .Intern  (M1nt)    4.971    0.115   43.276    0.000    4.971    3.757
+   .Extern  (M2nt)    4.063    0.100   40.820    0.000    4.063    3.342
+   .Hostile (M3nt)    4.069    0.067   60.988    0.000    4.069    4.826
+   .Benev   (M4nt)    4.109    0.059   69.488    0.000    4.109    5.204
+   .Warmth  (Yint)    7.456    0.845    8.821    0.000    7.456    3.074
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (Xvar)    0.195    0.012   16.398    0.000    0.195    1.000
+   .Intern  (M1vr)    1.729    0.087   19.890    0.000    1.729    0.987
+   .Extern  (M2vr)    1.478    0.081   18.154    0.000    1.478    1.000
+   .Hostile (M3vr)    0.704    0.047   15.003    0.000    0.704    0.989
+   .Benev   (M4vr)    0.623    0.038   16.396    0.000    0.623    0.999
+   .Warmth  (Yvar)    4.401    0.247   17.822    0.000    4.401    0.748
+
+R-Square:
+                   Estimate
+    Intern            0.013
+    Extern            0.000
+    Hostile           0.011
+    Benev             0.001
+    Warmth            0.252
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    XtoM1toY          0.189    0.072    2.609    0.009    0.189    0.034
+    XtoM2toY          0.002    0.007    0.346    0.730    0.002    0.000
+    XtoM3toY          0.159    0.062    2.579    0.010    0.159    0.029
+    XtoM4toY          0.011    0.015    0.717    0.474    0.011    0.002
+    totXtoY           0.349    0.235    1.484    0.138    0.349    0.064
+    totInd            0.361    0.109    3.328    0.001    0.361    0.066
+
+
+   
+
+> print("R Multiple-Group Path Model with Indirect Effects using Robust FIML and Standard Errors")
+[1] "R Multiple-Group Path Model with Indirect Effects using Robust FIML and Standard Errors"
+> SyntaxMultiple = "\n# Means/Intercepts and Variances/Residual Variances (labels)\n  MindC   ~ c(mXint,  wXint)*1;  MindC   ~~ c(mXvar,  wXvar)*MindC;\n  Intern  ~ c(mM1int, wM1int)*1; Intern  ~~ c(mM1var, wM1var)*Intern; \n  Extern  ~ c(mM2int, wM2int)*1; Extern  ~~ c(mM2var, wM2var)*Extern;\n  Hostile ~ c(mM3int, wM3int)*1; Hostile ~~ c(mM3var, wM3var)*Hostile;\n  Benev   ~ c(mM4int, wM4int)*1; Benev   ~~ c(mM4var, wM4var)*Benev;\n  Warmth  ~ c(mYint,  wYint)*1;  Warmth  ~~ c(mYvar,  wYvar)*Warmth;\n# Direct MindC --> Warmth\n  Warmth ~ c(mXtoY, wXtoY)*MindC\n# Left side of model\n  Intern  ~ c(mXtoM1, wXtoM1)*MindC\n  Extern  ~ c(mXtoM2, wXtoM2)*MindC\n  Hostile ~ c(mXtoM3, wXtoM3)*MindC\n  Benev   ~ c(mXtoM4, wXtoM4)*MindC\n# Right side of model\n  Warmth ~ c(mM1toY, wM1toY)*Intern  + c(mM2toY, wM2toY)*Extern \n
++ 
++  + c(mM3toY, wM3toY)*Hostile + c(mM4toY, wM4toY)*Benev\n# Residual Covariances\n  Intern  ~~ c(mCov1, wCov1)*Extern  + c(mCov2, wCov2)*Hostile + c(mCov3, wCov3)*Benev\n  Extern  ~~ c(mCov4, wCov4)*Hostile + c(mCov5, wCov5)*Benev\n  Hostile ~~ c(mCov6, wCov6)*Benev\n# Indirect effects for both groups\n  mXtoM1Y := mXtoM1*mM1toY; wXtoM1Y := wXtoM1*wM1toY\n  mXtoM2Y := mXtoM2*mM2toY; wXtoM2Y := wXtoM2*wM2toY\n  mXtoM3Y := mXtoM3*mM3toY; wXtoM3Y := wXtoM3*wM3toY\n  mXtoM4Y := mXtoM4*mM4toY; wXtoM4Y := wXtoM4*wM4toY\n# Total indirect+direct and total indirect effects for both groups\n  mtotXtoY  := mXtoM1*mM1toY + mXtoM2*mM2toY + mXtoM3*mM3toY + mXtoM4*mM4toY + mXtoY\n  mtotInd   := mXtoM1*mM1toY + mXtoM2*mM2toY + mXtoM3*mM3toY + mXtoM4*mM4toY\n  wtotXtoY  := wXtoM1*wM1toY + wXtoM2*wM2toY + wXtoM3*wM3toY + wXtoM4*wM4toY + wXtoY\n  wtotInd   := wXtoM1*wM1toY + wXtoM2*wM2toY + wXtoM3*wM3toY + wXtoM4*wM4toY\n# Differences in direct effects across groups\n  dXtoM1 := mXtoM1-wXtoM1; dXtoM2 := mXtoM2-wXtoM2;\n  dXtoM3 := mXtoM3-wXtoM3; dXtoM4 := mXtoM4-wXtoM4;\n  dM1toY := mM1toY-wM1toY; dM2toY := mM2toY-wM2toY;\n  dM3toY := mM3toY-wM3toY; dM4toY := mM4toY-wM4toY;\n# Differences in indirect effects across groups\n  dXtoM1Y := mXtoM1Y-wXtoM1Y; dXtoM2Y := mXtoM2Y-wXtoM2Y\n  dXtoM3Y := mXtoM3Y-wXtoM3Y; dXtoM4Y := mXtoM4Y-wXtoM4Y\n# Differences in total indirect+direct and total indirect effects across groups\n  dtotXtoY := mtotXtoY-wtotXtoY; dtotInd := mtotInd-wtotInd \n"
+> ModelMultiple = lavaan(data = Mindful, model = SyntaxMultiple, 
++ estimator = "MLR", mimic = "mplus", group = "SexMW")
+> summary(ModelMultiple, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+lavaan 0.6.13 ended normally after 87 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        54
+
+  Number of observations per group:                   
+    0                                              273
+    1                                              380
+  Number of missing patterns per group:               
+    0                                                3
+    1                                                3
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 0.000       0.000
+  Degrees of freedom                                 0           0
+  Test statistic for each group:
+    0                                            0.000       0.000
+    1                                            0.000       0.000
+
+Model Test Baseline Model:
+
+  Test statistic                               399.257     363.321
+  Degrees of freedom                                30          30
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.099
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    1.000       1.000
+  Tucker-Lewis Index (TLI)                       1.000       1.000
+                                                                  
+  Robust Comparative Fit Index (CFI)                         1.000
+  Robust Tucker-Lewis Index (TLI)                            1.000
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)              -5332.207   -5332.207
+  Loglikelihood unrestricted model (H1)      -5332.207   -5332.207
+                                                                  
+  Akaike (AIC)                               10772.414   10772.414
+  Bayesian (BIC)                             11014.420   11014.420
+  Sample-size adjusted Bayesian (SABIC)      10842.970   10842.970
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.000          NA
+  90 Percent confidence interval - lower         0.000          NA
+  90 Percent confidence interval - upper         0.000          NA
+  P-value H_0: RMSEA <= 0.050                       NA          NA
+  P-value H_0: RMSEA >= 0.080                       NA          NA
+                                                                  
+  Robust RMSEA                                               0.000
+  90 Percent confidence interval - lower                     0.000
+  90 Percent confidence interval - upper                     0.000
+  P-value H_0: Robust RMSEA <= 0.050                            NA
+  P-value H_0: Robust RMSEA >= 0.080                            NA
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.000       0.000
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+
+Group 1 [0]:
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  Warmth ~                                                              
+    MindC   (mXtY)    0.213    0.364    0.585    0.558    0.213    0.038
+  Intern ~                                                              
+    MindC   (mXM1)    0.633    0.199    3.179    0.001    0.633    0.197
+  Extern ~                                                              
+    MindC   (mXM2)    0.273    0.166    1.648    0.099    0.273    0.095
+  Hostile ~                                                             
+    MindC   (mXM3)   -0.171    0.126   -1.357    0.175   -0.171   -0.084
+  Benev ~                                                               
+    MindC   (mXM4)   -0.314    0.111   -2.829    0.005   -0.314   -0.170
+  Warmth ~                                                              
+    Intern  (mM1Y)    0.548    0.107    5.127    0.000    0.548    0.316
+    Extern  (mM2Y)    0.047    0.109    0.433    0.665    0.047    0.024
+    Hostile (mM3Y)   -0.845    0.155   -5.454    0.000   -0.845   -0.311
+    Benev   (mM4Y)   -0.158    0.168   -0.937    0.349   -0.158   -0.052
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+ .Intern ~~                                                             
+   .Extern  (mCv1)    0.640    0.132    4.857    0.000    0.640    0.380
+   .Hostile (mCv2)   -0.475    0.088   -5.406    0.000   -0.475   -0.393
+   .Benev   (mCv3)    0.107    0.074    1.445    0.148    0.107    0.099
+ .Extern ~~                                                             
+   .Hostile (mCv4)    0.058    0.077    0.750    0.453    0.058    0.053
+   .Benev   (mCv5)    0.154    0.067    2.299    0.021    0.154    0.158
+ .Hostile ~~                                                            
+   .Benev   (mCv6)    0.036    0.048    0.742    0.458    0.036    0.051
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (mXnt)    0.817    0.026   31.181    0.000    0.817    1.887
+   .Intern  (mM1n)    4.391    0.185   23.735    0.000    4.391    3.159
+   .Extern  (mM2n)    3.871    0.158   24.499    0.000    3.871    3.123
+   .Hostile (mM3n)    4.334    0.113   38.332    0.000    4.334    4.877
+   .Benev   (mM4n)    4.460    0.093   48.212    0.000    4.460    5.567
+   .Warmth  (mYnt)    6.815    1.258    5.418    0.000    6.815    2.823
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (mXvr)    0.187    0.019   10.023    0.000    0.187    1.000
+   .Intern  (mM1v)    1.857    0.147   12.667    0.000    1.857    0.961
+   .Extern  (mM2v)    1.522    0.126   12.056    0.000    1.522    0.991
+   .Hostile (mM3v)    0.784    0.076   10.385    0.000    0.784    0.993
+   .Benev   (mM4v)    0.623    0.059   10.504    0.000    0.623    0.971
+   .Warmth  (mYvr)    4.124    0.394   10.465    0.000    4.124    0.708
+
+R-Square:
+                   Estimate
+    Intern            0.039
+    Extern            0.009
+    Hostile           0.007
+    Benev             0.029
+    Warmth            0.292
+
+
+Group 2 [1]:
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  Warmth ~                                                              
+    MindC   (wXtY)   -0.126    0.254   -0.498    0.618   -0.126   -0.026
+  Intern ~                                                              
+    MindC   (wXM1)    0.099    0.146    0.676    0.499    0.099    0.036
+  Extern ~                                                              
+    MindC   (wXM2)   -0.117    0.133   -0.874    0.382   -0.117   -0.044
+  Hostile ~                                                             
+    MindC   (wXM3)   -0.181    0.081   -2.250    0.024   -0.181   -0.109
+  Benev ~                                                               
+    MindC   (wXM4)    0.138    0.079    1.762    0.078    0.138    0.081
+  Warmth ~                                                              
+    Intern  (wM1Y)    0.449    0.105    4.264    0.000    0.449    0.247
+    Extern  (wM2Y)    0.084    0.099    0.841    0.401    0.084    0.045
+    Hostile (wM3Y)   -0.535    0.161   -3.328    0.001   -0.535   -0.180
+    Benev   (wM4Y)   -0.159    0.151   -1.054    0.292   -0.159   -0.055
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+ .Intern ~~                                                             
+   .Extern  (wCv1)    0.556    0.085    6.556    0.000    0.556    0.383
+   .Hostile (wCv2)   -0.184    0.047   -3.900    0.000   -0.184   -0.205
+   .Benev   (wCv3)   -0.012    0.050   -0.233    0.816   -0.012   -0.013
+ .Extern ~~                                                             
+   .Hostile (wCv4)    0.023    0.044    0.522    0.602    0.023    0.026
+   .Benev   (wCv5)    0.157    0.052    3.000    0.003    0.157    0.171
+ .Hostile ~~                                                            
+   .Benev   (wCv6)    0.118    0.032    3.656    0.000    0.118    0.210
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (wXnt)    0.847    0.023   36.886    0.000    0.847    1.892
+   .Intern  (wM1n)    5.414    0.138   39.269    0.000    5.414    4.457
+   .Extern  (wM2n)    4.200    0.125   33.482    0.000    4.200    3.504
+   .Hostile (wM3n)    3.853    0.077   50.063    0.000    3.853    5.185
+   .Benev   (wM4n)    3.848    0.074   51.657    0.000    3.848    5.025
+   .Warmth  (wYnt)    7.172    1.081    6.633    0.000    7.172    3.256
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (wXvr)    0.200    0.015   13.042    0.000    0.200    1.000
+   .Intern  (wM1v)    1.473    0.089   16.634    0.000    1.473    0.999
+   .Extern  (wM2v)    1.433    0.105   13.603    0.000    1.433    0.998
+   .Hostile (wM3v)    0.545    0.043   12.743    0.000    0.545    0.988
+   .Benev   (wM4v)    0.583    0.046   12.659    0.000    0.583    0.993
+   .Warmth  (wYvr)    4.230    0.303   13.972    0.000    4.230    0.872
+
+R-Square:
+                   Estimate
+    Intern            0.001
+    Extern            0.002
+    Hostile           0.012
+    Benev             0.007
+    Warmth            0.128
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    mXtoM1Y           0.347    0.126    2.750    0.006    0.347    0.062
+    wXtoM1Y           0.044    0.066    0.671    0.502    0.044    0.009
+    mXtoM2Y           0.013    0.030    0.434    0.665    0.013    0.002
+    wXtoM2Y          -0.010    0.015   -0.644    0.520   -0.010   -0.002
+    mXtoM3Y           0.145    0.111    1.300    0.194    0.145    0.026
+    wXtoM3Y           0.097    0.053    1.846    0.065    0.097    0.020
+    mXtoM4Y           0.050    0.058    0.855    0.393    0.050    0.009
+    wXtoM4Y          -0.022    0.024   -0.937    0.349   -0.022   -0.004
+    mtotXtoY          0.768    0.402    1.910    0.056    0.768    0.138
+    mtotInd           0.554    0.204    2.717    0.007    0.554    0.099
+    wtotXtoY         -0.017    0.257   -0.066    0.948   -0.017   -0.003
+    wtotInd           0.109    0.097    1.127    0.260    0.109    0.022
+    dXtoM1            0.535    0.247    2.166    0.030    0.535    0.161
+    dXtoM2            0.389    0.213    1.831    0.067    0.389    0.139
+    dXtoM3            0.010    0.150    0.066    0.948    0.010    0.026
+    dXtoM4           -0.452    0.136   -3.327    0.001   -0.452   -0.250
+    dM1toY            0.099    0.150    0.661    0.509    0.099    0.068
+    dM2toY           -0.036    0.148   -0.245    0.806   -0.036   -0.021
+    dM3toY           -0.310    0.223   -1.390    0.164   -0.310   -0.131
+    dM4toY            0.001    0.226    0.006    0.995    0.001    0.003
+    dXtoM1Y           0.303    0.142    2.126    0.034    0.303    0.053
+    dXtoM2Y           0.023    0.033    0.678    0.498    0.023    0.004
+    dXtoM3Y           0.048    0.123    0.389    0.697    0.048    0.006
+    dXtoM4Y           0.072    0.063    1.144    0.253    0.072    0.013
+    dtotXtoY          0.784    0.477    1.644    0.100    0.784    0.141
+    dtotInd           0.445    0.226    1.969    0.049    0.445    0.077
+
+
+   
+
+> print("R Multiple-Group Path Model with Indirect Effects using Robust FIML and Standard Errors")
+[1] "R Multiple-Group Path Model with Indirect Effects using Robust FIML and Standard Errors"
+> print("Testing Equality of Direct effect XtoM1 by Holding it Equal by Sex")
+[1] "Testing Equality of Direct effect XtoM1 by Holding it Equal by Sex"
+> print("Model chi-square provides significance test of 1 new constraint")
+[1] "Model chi-square provides significance test of 1 new constraint"
+> SyntaxMultipleXtoM1 = "\n# Means/Intercepts and Variances/Residual Variances (labels)\n  MindC   ~ c(mXint,  wXint)*1;  MindC   ~~ c(mXvar,  wXvar)*MindC;\n  Intern  ~ c(mM1int, wM1int)*1; Intern  ~~ c(mM1var, wM1var)*Intern; \n  Extern  ~ c(mM2int, wM2int)*1; Extern  ~~ c(mM2var, wM2var)*Extern;\n  Hostile ~ c(mM3int, wM3int)*1; Hostile ~~ c(mM3var, wM3var)*Hostile;\n  Benev   ~ c(mM4int, wM4int)*1; Benev   ~~ c(mM4var, wM4var)*Benev;\n  Warmth  ~ c(mYint,  wYint)*1;  Warmth  ~~ c(mYvar,  wYvar)*Warmth;\n# Direct MindC --> Warmth\n  Warmth ~ c(mXtoY, wXtoY)*MindC\n# Left side of model\n  Intern  ~ (XtoM1)*MindC\n  Extern  ~ c(mXtoM2, wXtoM2)*MindC\n  Hostile ~ c(mXtoM3, wXtoM3)*MindC\n  Benev   ~ c(mXtoM4, wXtoM4)*MindC\n# Right side of model\n  Warmth ~ c(mM1toY, wM1toY)*Intern  + c(mM2toY, wM2toY)*Extern \n
++ 
++  + c(mM3toY, wM3toY)*Hostile + c(mM4toY, wM4toY)*Benev\n# Residual Covariances\n  Intern  ~~ c(mCov1, wCov1)*Extern  + c(mCov2, wCov2)*Hostile + c(mCov3, wCov3)*Benev\n  Extern  ~~ c(mCov4, wCov4)*Hostile + c(mCov5, wCov5)*Benev\n  Hostile ~~ c(mCov6, wCov6)*Benev\n"
+> ModelMultipleXtoM1 = lavaan(data = Mindful, model = SyntaxMultipleXtoM1, 
++ estimator = "MLR", mimic = "mplus", group = "SexMW")
+> summary(ModelMultipleXtoM1, fit.measures = TRUE, rsquare = TRUE, 
++ standardized = TRUE)
+lavaan 0.6.13 ended normally after 74 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        54
+  Number of equality constraints                     1
+
+  Number of observations per group:                   
+    0                                              273
+    1                                              380
+  Number of missing patterns per group:               
+    0                                                3
+    1                                                3
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 5.113       4.626
+  Degrees of freedom                                 1           1
+  P-value (Chi-square)                           0.024       0.031
+  Scaling correction factor                                  1.105
+    Yuan-Bentler correction (Mplus variant)                       
+  Test statistic for each group:
+    0                                            3.349       3.030
+    1                                            1.764       1.596
+
+Model Test Baseline Model:
+
+  Test statistic                               399.257     363.321
+  Degrees of freedom                                30          30
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.099
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.989       0.989
+  Tucker-Lewis Index (TLI)                       0.666       0.674
+                                                                  
+  Robust Comparative Fit Index (CFI)                         0.989
+  Robust Tucker-Lewis Index (TLI)                            0.670
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)              -5334.764   -5334.764
+  Scaling correction factor                                  1.044
+      for the MLR correction                                      
+  Loglikelihood unrestricted model (H1)      -5332.207   -5332.207
+  Scaling correction factor                                  1.065
+      for the MLR correction                                      
+                                                                  
+  Akaike (AIC)                               10775.527   10775.527
+  Bayesian (BIC)                             11013.051   11013.051
+  Sample-size adjusted Bayesian (SABIC)      10844.776   10844.776
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.112       0.105
+  90 Percent confidence interval - lower         0.033       0.028
+  90 Percent confidence interval - upper         0.216       0.205
+  P-value H_0: RMSEA <= 0.050                    0.088       0.102
+  P-value H_0: RMSEA >= 0.080                    0.793       0.762
+                                                                  
+  Robust RMSEA                                               0.112
+  90 Percent confidence interval - lower                     0.030
+  90 Percent confidence interval - upper                     0.219
+  P-value H_0: Robust RMSEA <= 0.050                         0.094
+  P-value H_0: Robust RMSEA >= 0.080                         0.786
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.021       0.021
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+
+Group 1 [0]:
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  Warmth ~                                                              
+    MindC   (mXtY)    0.213    0.364    0.585    0.558    0.213    0.038
+  Intern ~                                                              
+    MindC   (XtM1)    0.284    0.119    2.387    0.017    0.284    0.089
+  Extern ~                                                              
+    MindC   (mXM2)    0.152    0.160    0.952    0.341    0.152    0.053
+  Hostile ~                                                             
+    MindC   (mXM3)   -0.082    0.119   -0.691    0.489   -0.082   -0.040
+  Benev ~                                                               
+    MindC   (mXM4)   -0.334    0.110   -3.023    0.003   -0.334   -0.180
+  Warmth ~                                                              
+    Intern  (mM1Y)    0.548    0.107    5.127    0.000    0.548    0.314
+    Extern  (mM2Y)    0.047    0.109    0.433    0.665    0.047    0.024
+    Hostile (mM3Y)   -0.845    0.155   -5.454    0.000   -0.845   -0.312
+    Benev   (mM4Y)   -0.158    0.168   -0.937    0.349   -0.158   -0.053
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+ .Intern ~~                                                             
+   .Extern  (mCv1)    0.647    0.133    4.866    0.000    0.647    0.382
+   .Hostile (mCv2)   -0.480    0.089   -5.402    0.000   -0.480   -0.395
+   .Benev   (mCv3)    0.108    0.075    1.449    0.147    0.108    0.100
+ .Extern ~~                                                             
+   .Hostile (mCv4)    0.056    0.077    0.722    0.470    0.056    0.051
+   .Benev   (mCv5)    0.155    0.067    2.302    0.021    0.155    0.158
+ .Hostile ~~                                                            
+   .Benev   (mCv6)    0.036    0.048    0.733    0.463    0.036    0.051
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (mXnt)    0.817    0.026   31.181    0.000    0.817    1.887
+   .Intern  (mM1n)    4.677    0.126   37.032    0.000    4.677    3.397
+   .Extern  (mM2n)    3.969    0.154   25.802    0.000    3.969    3.210
+   .Hostile (mM3n)    4.261    0.106   40.128    0.000    4.261    4.803
+   .Benev   (mM4n)    4.476    0.093   48.351    0.000    4.476    5.577
+   .Warmth  (mYnt)    6.815    1.258    5.418    0.000    6.815    2.835
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (mXvr)    0.187    0.019   10.023    0.000    0.187    1.000
+   .Intern  (mM1v)    1.880    0.148   12.724    0.000    1.880    0.992
+   .Extern  (mM2v)    1.525    0.127   12.041    0.000    1.525    0.997
+   .Hostile (mM3v)    0.786    0.076   10.359    0.000    0.786    0.998
+   .Benev   (mM4v)    0.623    0.059   10.502    0.000    0.623    0.968
+   .Warmth  (mYvr)    4.124    0.394   10.465    0.000    4.124    0.714
+
+R-Square:
+                   Estimate
+    Intern            0.008
+    Extern            0.003
+    Hostile           0.002
+    Benev             0.032
+    Warmth            0.286
+
+
+Group 2 [1]:
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  Warmth ~                                                              
+    MindC   (wXtY)   -0.126    0.254   -0.498    0.618   -0.126   -0.026
+  Intern ~                                                              
+    MindC   (XtM1)    0.284    0.119    2.387    0.017    0.284    0.104
+  Extern ~                                                              
+    MindC   (wXM2)   -0.047    0.131   -0.359    0.720   -0.047   -0.018
+  Hostile ~                                                             
+    MindC   (wXM3)   -0.204    0.081   -2.536    0.011   -0.204   -0.123
+  Benev ~                                                               
+    MindC   (wXM4)    0.137    0.079    1.728    0.084    0.137    0.080
+  Warmth ~                                                              
+    Intern  (wM1Y)    0.449    0.105    4.264    0.000    0.449    0.249
+    Extern  (wM2Y)    0.084    0.099    0.841    0.401    0.084    0.045
+    Hostile (wM3Y)   -0.535    0.161   -3.328    0.001   -0.535   -0.181
+    Benev   (wM4Y)   -0.159    0.151   -1.054    0.292   -0.159   -0.055
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+ .Intern ~~                                                             
+   .Extern  (wCv1)    0.559    0.085    6.547    0.000    0.559    0.383
+   .Hostile (wCv2)   -0.185    0.047   -3.897    0.000   -0.185   -0.205
+   .Benev   (wCv3)   -0.012    0.050   -0.233    0.816   -0.012   -0.013
+ .Extern ~~                                                             
+   .Hostile (wCv4)    0.023    0.044    0.514    0.607    0.023    0.026
+   .Benev   (wCv5)    0.157    0.052    2.998    0.003    0.157    0.171
+ .Hostile ~~                                                            
+   .Benev   (wCv6)    0.118    0.032    3.655    0.000    0.118    0.210
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (wXnt)    0.847    0.023   36.886    0.000    0.847    1.892
+   .Intern  (wM1n)    5.257    0.120   43.910    0.000    5.257    4.297
+   .Extern  (wM2n)    4.140    0.123   33.689    0.000    4.140    3.457
+   .Hostile (wM3n)    3.872    0.077   50.416    0.000    3.872    5.203
+   .Benev   (wM4n)    3.850    0.075   51.384    0.000    3.850    5.027
+   .Warmth  (wYnt)    7.172    1.081    6.633    0.000    7.172    3.254
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    MindC   (wXvr)    0.200    0.015   13.042    0.000    0.200    1.000
+   .Intern  (wM1v)    1.480    0.090   16.526    0.000    1.480    0.989
+   .Extern  (wM2v)    1.434    0.106   13.594    0.000    1.434    1.000
+   .Hostile (wM3v)    0.546    0.043   12.740    0.000    0.546    0.985
+   .Benev   (wM4v)    0.583    0.046   12.659    0.000    0.583    0.994
+   .Warmth  (wYvr)    4.230    0.303   13.972    0.000    4.230    0.871
+
+R-Square:
+                   Estimate
+    Intern            0.011
+    Extern            0.000
+    Hostile           0.015
+    Benev             0.006
+    Warmth            0.129
+
+
+   
+

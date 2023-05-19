@@ -1,0 +1,721 @@
+Mplus VERSION 8.7
+MUTHEN & MUTHEN
+04/22/2022   4:31 PM
+
+INPUT INSTRUCTIONS
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!! Mplus Lines Cannot Exceed 90 Characters !!!!!!!!!!!!!!!!!!!!!
+  TITLE:  Example 6b: Mplus Path Analysis for Dissertation Follow-up
+  DATA:   FILE = driver.csv;      ! Can just list file name if in same folder;
+          FORMAT = free;          ! FREE (default) or FIXED format;
+          TYPE = individual;      ! Individual (default) or matrix data as input;
+  VARIABLE:
+  ! List of ALL variables in original wide data file, in order;
+  ! Mplus names must use 8 characters or fewer (so rename as needed);
+    NAMES = PartID sex age75 cs_1_5 cs_3 cs_6 cs_12 cs_18 far near
+  	      zufov1 zufov2 zufov3 Dscan lane da_task crash stop speed time
+  	      simfac part visfac attfac limit4 ticket2 speed2 follow attr
+            nacc2 jacc2 jacc20 acc2;
+  ! List of ALL variables used in model;
+    USEVARIABLE = sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac
+                  limit4 speed2 acc2;
+  ! Missing data identifier;
+    MISSING = ALL (-999);
+  ! Select only follow-up cases;
+    USEOBS = follow EQ 1;
+  ! Categorical outcomes;
+    CATEGORICAL = acc2 speed2;
+
+  ANALYSIS: LINK = LOGIT;                    ! Link function for categorical outcomes;
+            ESTIMATOR = MLR;                 ! Robust full-information maximum likelihood;
+            INTEGRATION = MONTECARLO(1000);  ! Mplus required (#samples);
+  OUTPUT:   CINTERVAL;                       ! Print confidence intervals;
+            STDYX;                           ! Print fully standardized solution, too;
+            SAMPSTAT;                        ! Print descriptive statistics;
+
+  MODEL: ! * --> Estimated parameter (all listed below for clarity);
+
+  ! Outcome intercepts (for continuous variables);
+    [simfac* limit4*];
+  ! Outcome thresholds (for binary variables);
+    [speed2$1* acc2$1*];
+
+  ! Regressions: y outcomes ON x predictors (label to do math on later, * implied);
+    simfac ON sex age75 visfac zufov1 zufov2 zufov3 Dscan               (sim1-sim7);
+    limit4 ON sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac        (lim1-lim8);
+    acc2   ON sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac limit4 (acc1-acc9);
+    speed2 ON sex age75 visfac zufov1 zufov2 zufov3 Dscan simfac limit4 (spd1-spd9);
+
+  ! Estimated residual variances for continuous outcomes;
+    simfac* limit4*;
+
+  ! Random intercept factor for binary outcome covariance;
+    RandInt BY speed2@1 acc2@1;
+    [RandInt@0]; ! Fix fixed intercept to 0;
+     RandInt*;   ! Estimate random intercept variance;
+
+  MODEL CONSTRAINT:         ! Like ESTIMATE in SAS or LINCOM in STATA;
+    NEW(DStoAcc);           ! List names of estimated effects on NEW;
+    DStoAcc = sim7 * acc8;  ! Indirect effect of Dscan --> Sim --> Acc;
+
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+Example 6b: Mplus Path Analysis for Dissertation Follow-up
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         114
+
+Number of dependent variables                                    4
+Number of independent variables                                  7
+Number of continuous latent variables                            1
+
+Observed dependent variables
+
+  Continuous
+   SIMFAC      LIMIT4
+
+  Binary and ordered categorical (ordinal)
+   SPEED2      ACC2
+
+Observed independent variables
+   SEX         AGE75       VISFAC      ZUFOV1      ZUFOV2      ZUFOV3
+   DSCAN
+
+Continuous latent variables
+   RANDINT
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-02
+    Relative loglikelihood change                        0.100D-05
+    Derivative                                           0.100D-02
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-02
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-02
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Integration Specifications
+  Type                                                  MONTECARLO
+  Number of integration points                                1000
+  Dimensions of numerical integration                            3
+  Adaptive quadrature                                           ON
+  Monte Carlo integration seed                                   0
+Link                                                         LOGIT
+Cholesky                                                       OFF
+
+Input data file(s)
+  driver.csv
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             7
+     Number of y missing data patterns           4
+     Number of u missing data patterns           2
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              SPEED2        ACC2          SIMFAC        LIMIT4        SEX
+              ________      ________      ________      ________      ________
+ SPEED2         0.974
+ ACC2           0.974         1.000
+ SIMFAC         0.833         0.851         0.851
+ LIMIT4         0.956         0.974         0.833         0.974
+ SEX            0.974         1.000         0.851         0.974         1.000
+ AGE75          0.974         1.000         0.851         0.974         1.000
+ VISFAC         0.974         1.000         0.851         0.974         1.000
+ ZUFOV1         0.974         1.000         0.851         0.974         1.000
+ ZUFOV2         0.974         1.000         0.851         0.974         1.000
+ ZUFOV3         0.974         1.000         0.851         0.974         1.000
+ DSCAN          0.974         1.000         0.851         0.974         1.000
+
+
+           Covariance Coverage
+              AGE75         VISFAC        ZUFOV1        ZUFOV2        ZUFOV3
+              ________      ________      ________      ________      ________
+ AGE75          1.000
+ VISFAC         1.000         1.000
+ ZUFOV1         1.000         1.000         1.000
+ ZUFOV2         1.000         1.000         1.000         1.000
+ ZUFOV3         1.000         1.000         1.000         1.000         1.000
+ DSCAN          1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              DSCAN
+              ________
+ DSCAN          1.000
+
+
+     PROPORTION OF DATA PRESENT FOR U
+
+
+           Covariance Coverage
+              SPEED2        ACC2
+              ________      ________
+ SPEED2         0.974
+ ACC2           0.974         1.000
+
+
+     PROPORTION OF DATA PRESENT FOR Y
+
+
+           Covariance Coverage
+              SIMFAC        LIMIT4        SEX           AGE75         VISFAC
+              ________      ________      ________      ________      ________
+ SIMFAC         0.851
+ LIMIT4         0.833         0.974
+ SEX            0.851         0.974         1.000
+ AGE75          0.851         0.974         1.000         1.000
+ VISFAC         0.851         0.974         1.000         1.000         1.000
+ ZUFOV1         0.851         0.974         1.000         1.000         1.000
+ ZUFOV2         0.851         0.974         1.000         1.000         1.000
+ ZUFOV3         0.851         0.974         1.000         1.000         1.000
+ DSCAN          0.851         0.974         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              ZUFOV1        ZUFOV2        ZUFOV3        DSCAN
+              ________      ________      ________      ________
+ ZUFOV1         1.000
+ ZUFOV2         1.000         1.000
+ ZUFOV3         1.000         1.000         1.000
+ DSCAN          1.000         1.000         1.000         1.000
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    SPEED2
+      Category 1    0.874           97.000
+      Category 2    0.126           14.000
+    ACC2
+      Category 1    0.877          100.000
+      Category 2    0.123           14.000
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              SIMFAC        LIMIT4        SEX           AGE75         VISFAC
+              ________      ________      ________      ________      ________
+               -0.027         0.217         0.579        -0.094        -0.090
+
+
+           Means
+              ZUFOV1        ZUFOV2        ZUFOV3        DSCAN
+              ________      ________      ________      ________
+               -0.072        -0.025         0.059        -0.051
+
+
+           Covariances
+              SIMFAC        LIMIT4        SEX           AGE75         VISFAC
+              ________      ________      ________      ________      ________
+ SIMFAC         0.615
+ LIMIT4         0.077         0.921
+ SEX            0.036         0.078         0.244
+ AGE75          0.545         0.192        -0.061        22.258
+ VISFAC         0.034         0.017        -0.017         0.891         0.772
+ ZUFOV1         0.104         0.099        -0.037         0.487         0.102
+ ZUFOV2         0.292         0.154         0.014         1.097         0.142
+ ZUFOV3         0.293         0.026        -0.035         1.717         0.256
+ DSCAN          0.324         0.137         0.023         1.867         0.174
+
+
+           Covariances
+              ZUFOV1        ZUFOV2        ZUFOV3        DSCAN
+              ________      ________      ________      ________
+ ZUFOV1         0.802
+ ZUFOV2         0.253         0.900
+ ZUFOV3         0.262         0.499         1.021
+ DSCAN          0.177         0.418         0.590         0.955
+
+
+           Correlations
+              SIMFAC        LIMIT4        SEX           AGE75         VISFAC
+              ________      ________      ________      ________      ________
+ SIMFAC         1.000
+ LIMIT4         0.102         1.000
+ SEX            0.094         0.165         1.000
+ AGE75          0.147         0.042        -0.026         1.000
+ VISFAC         0.049         0.021        -0.039         0.215         1.000
+ ZUFOV1         0.148         0.115        -0.083         0.115         0.130
+ ZUFOV2         0.393         0.169         0.030         0.245         0.171
+ ZUFOV3         0.370         0.027        -0.071         0.360         0.288
+ DSCAN          0.423         0.146         0.049         0.405         0.202
+
+
+           Correlations
+              ZUFOV1        ZUFOV2        ZUFOV3        DSCAN
+              ________      ________      ________      ________
+ ZUFOV1         1.000
+ ZUFOV2         0.298         1.000
+ ZUFOV3         0.289         0.521         1.000
+ DSCAN          0.202         0.451         0.597         1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS -1370.672
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     SIMFAC               -0.037       0.365      -1.383    1.03%      -0.765     -0.324     -0.122
+              97.000       0.622      -0.632       1.981    1.03%       0.008      0.693
+     LIMIT4                0.218       0.770      -1.000   11.71%      -0.500     -0.250      0.000
+             111.000       0.922      -0.160       3.000    0.90%       0.250      1.000
+     SEX                   0.579      -0.320       0.000   42.11%       0.000      0.000      1.000
+             114.000       0.244      -1.898       1.000   57.89%       1.000      1.000
+     AGE75                -0.094       0.049     -11.646    0.88%      -4.766     -1.146      0.220
+             114.000      22.258      -0.409      10.038    0.88%       0.962      3.352
+     VISFAC               -0.090       0.034      -2.525    0.88%      -0.731     -0.426     -0.168
+             114.000       0.772       0.277       2.094    0.88%       0.035      0.632
+     ZUFOV1               -0.072       2.553      -0.608   44.74%      -0.608     -0.608     -0.385
+             114.000       0.802       6.742       4.221    0.88%      -0.237      0.283
+     ZUFOV2               -0.025       0.766      -1.072    0.88%      -0.902     -0.603     -0.383
+             114.000       0.900      -0.445       2.665    0.88%       0.017      0.896
+     ZUFOV3                0.059       0.348      -1.741    0.88%      -0.897     -0.369     -0.117
+             114.000       1.021      -0.927       1.733   15.79%       0.134      1.108
+     DSCAN                -0.051       0.213      -2.310    0.88%      -0.820     -0.340     -0.090
+             114.000       0.955       0.102       2.950    0.88%       0.080      0.690
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       40
+
+Loglikelihood
+
+          H0 Value                        -318.727
+          H0 Scaling Correction Factor      0.9958
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                     717.455
+          Bayesian (BIC)                   826.903
+          Sample-Size Adjusted BIC         700.476
+            (n* = (n + 2) / 24)
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ RANDINT  BY
+    SPEED2             1.000      0.000    999.000    999.000
+    ACC2               1.000      0.000    999.000    999.000
+
+ SIMFAC     ON
+    SEX                0.125      0.134      0.931      0.352
+    AGE75             -0.005      0.017     -0.276      0.782
+    VISFAC            -0.067      0.085     -0.785      0.433
+    ZUFOV1             0.002      0.099      0.020      0.984
+    ZUFOV2             0.166      0.103      1.611      0.107
+    ZUFOV3             0.112      0.102      1.095      0.274
+    DSCAN              0.218      0.098      2.228      0.026
+
+ LIMIT4     ON
+    SEX                0.292      0.192      1.520      0.129
+    AGE75             -0.002      0.023     -0.078      0.938
+    VISFAC             0.013      0.102      0.127      0.899
+    ZUFOV1             0.098      0.125      0.782      0.434
+    ZUFOV2             0.150      0.125      1.204      0.229
+    ZUFOV3            -0.154      0.134     -1.150      0.250
+    DSCAN              0.138      0.128      1.076      0.282
+    SIMFAC             0.018      0.150      0.122      0.903
+
+ ACC2       ON
+    SEX               -0.761      0.559     -1.361      0.174
+    AGE75              0.059      0.083      0.711      0.477
+    VISFAC             0.086      0.310      0.279      0.781
+    ZUFOV1            -0.450      0.614     -0.733      0.463
+    ZUFOV2            -0.838      0.384     -2.178      0.029
+    ZUFOV3            -0.060      0.389     -0.155      0.877
+    DSCAN             -0.458      0.324     -1.415      0.157
+    SIMFAC             1.461      0.543      2.692      0.007
+    LIMIT4            -0.419      0.406     -1.033      0.302
+
+ SPEED2     ON
+    SEX               -1.388      0.746     -1.862      0.063
+    AGE75             -0.064      0.052     -1.226      0.220
+    VISFAC            -0.183      0.350     -0.523      0.601
+    ZUFOV1            -0.478      0.485     -0.986      0.324
+    ZUFOV2            -0.286      0.607     -0.471      0.638
+    ZUFOV3            -1.143      0.375     -3.045      0.002
+    DSCAN              0.964      0.516      1.869      0.062
+    SIMFAC            -0.346      0.692     -0.500      0.617
+    LIMIT4            -0.353      0.486     -0.726      0.468
+
+ Means
+    RANDINT            0.000      0.000    999.000    999.000
+
+ Intercepts
+    SIMFAC            -0.082      0.103     -0.794      0.427
+    LIMIT4             0.075      0.150      0.502      0.616
+
+ Thresholds
+    SPEED2$1           1.738      0.511      3.399      0.001
+    ACC2$1             2.050      0.533      3.843      0.000
+
+ Variances
+    RANDINT            0.049      0.005      9.158      0.000
+
+ Residual Variances
+    SIMFAC             0.465      0.061      7.598      0.000
+    LIMIT4             0.850      0.114      7.481      0.000
+
+New/Additional Parameters
+    DSTOACC            0.319      0.175      1.824      0.068
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.253E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+LOGISTIC REGRESSION ODDS RATIO RESULTS
+
+                                                95% C.I.
+                    Estimate       S.E.  Lower 2.5% Upper 2.5%
+
+ ACC2       ON
+    SEX                0.467      0.261      0.156      1.398
+    AGE75              1.061      0.088      0.902      1.248
+    VISFAC             1.090      0.337      0.594      2.000
+    ZUFOV1             0.638      0.391      0.192      2.123
+    ZUFOV2             0.433      0.166      0.204      0.919
+    ZUFOV3             0.942      0.367      0.439      2.020
+    DSCAN              0.633      0.205      0.335      1.193
+    SIMFAC             4.309      2.338      1.487     12.481
+    LIMIT4             0.658      0.267      0.297      1.457
+
+ SPEED2     ON
+    SEX                0.250      0.186      0.058      1.076
+    AGE75              0.938      0.049      0.847      1.039
+    VISFAC             0.833      0.292      0.419      1.654
+    ZUFOV1             0.620      0.301      0.239      1.604
+    ZUFOV2             0.751      0.456      0.228      2.470
+    ZUFOV3             0.319      0.120      0.153      0.665
+    DSCAN              2.622      1.352      0.954      7.204
+    SIMFAC             0.708      0.489      0.182      2.744
+    LIMIT4             0.703      0.341      0.271      1.821
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ RANDINT  BY
+    SPEED2             0.092      0.018      5.003      0.000
+    ACC2               0.096      0.016      5.919      0.000
+
+ SIMFAC     ON
+    SEX                0.078      0.085      0.927      0.354
+    AGE75             -0.028      0.100     -0.277      0.782
+    VISFAC            -0.075      0.096     -0.781      0.435
+    ZUFOV1             0.002      0.113      0.020      0.984
+    ZUFOV2             0.201      0.122      1.641      0.101
+    ZUFOV3             0.144      0.132      1.093      0.275
+    DSCAN              0.272      0.121      2.247      0.025
+
+ LIMIT4     ON
+    SEX                0.150      0.100      1.503      0.133
+    AGE75             -0.009      0.114     -0.078      0.938
+    VISFAC             0.012      0.094      0.127      0.899
+    ZUFOV1             0.091      0.117      0.783      0.434
+    ZUFOV2             0.149      0.121      1.226      0.220
+    ZUFOV3            -0.162      0.140     -1.153      0.249
+    DSCAN              0.140      0.131      1.069      0.285
+    SIMFAC             0.015      0.122      0.122      0.903
+
+ ACC2       ON
+    SEX               -0.163      0.122     -1.334      0.182
+    AGE75              0.121      0.175      0.690      0.490
+    VISFAC             0.033      0.117      0.282      0.778
+    ZUFOV1            -0.175      0.222     -0.789      0.430
+    ZUFOV2            -0.345      0.148     -2.326      0.020
+    ZUFOV3            -0.026      0.170     -0.155      0.877
+    DSCAN             -0.194      0.133     -1.462      0.144
+    SIMFAC             0.497      0.140      3.547      0.000
+    LIMIT4            -0.174      0.159     -1.098      0.272
+
+ SPEED2     ON
+    SEX               -0.284      0.126     -2.256      0.024
+    AGE75             -0.125      0.099     -1.265      0.206
+    VISFAC            -0.067      0.122     -0.548      0.584
+    ZUFOV1            -0.178      0.157     -1.133      0.257
+    ZUFOV2            -0.113      0.225     -0.502      0.616
+    ZUFOV3            -0.480      0.155     -3.088      0.002
+    DSCAN              0.391      0.166      2.349      0.019
+    SIMFAC            -0.113      0.212     -0.533      0.594
+    LIMIT4            -0.141      0.201     -0.699      0.484
+
+ Means
+    RANDINT            0.000      0.000    999.000    999.000
+
+ Intercepts
+    SIMFAC            -0.105      0.132     -0.789      0.430
+    LIMIT4             0.079      0.155      0.507      0.612
+
+ Thresholds
+    SPEED2$1           0.721      0.177      4.065      0.000
+    ACC2$1             0.889      0.199      4.466      0.000
+
+ Variances
+    RANDINT            1.000      0.000    999.000    999.000
+
+ Residual Variances
+    SIMFAC             0.754      0.081      9.363      0.000
+    LIMIT4             0.923      0.053     17.249      0.000
+
+
+R-SQUARE
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    SPEED2             0.433      0.205      2.111      0.035
+    ACC2               0.381      0.168      2.261      0.024
+    SIMFAC             0.246      0.081      3.050      0.002
+    LIMIT4             0.077      0.053      1.443      0.149
+
+
+CONFIDENCE INTERVALS OF MODEL RESULTS
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ RANDINT  BY
+    SPEED2           1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    ACC2             1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ SIMFAC   ON
+    SEX             -0.220      -0.138      -0.096       0.125       0.345       0.387       0.470
+    AGE75           -0.047      -0.037      -0.032      -0.005       0.023       0.028       0.038
+    VISFAC          -0.287      -0.234      -0.207      -0.067       0.073       0.100       0.153
+    ZUFOV1          -0.254      -0.193      -0.162       0.002       0.166       0.197       0.258
+    ZUFOV2          -0.100      -0.036      -0.004       0.166       0.336       0.368       0.432
+    ZUFOV3          -0.151      -0.088      -0.056       0.112       0.280       0.312       0.375
+    DSCAN           -0.034       0.026       0.057       0.218       0.379       0.410       0.471
+
+ LIMIT4   ON
+    SEX             -0.203      -0.084      -0.024       0.292       0.607       0.668       0.786
+    AGE75           -0.061      -0.047      -0.040      -0.002       0.036       0.044       0.058
+    VISFAC          -0.251      -0.188      -0.155       0.013       0.181       0.214       0.277
+    ZUFOV1          -0.224      -0.147      -0.108       0.098       0.303       0.343       0.420
+    ZUFOV2          -0.172      -0.095      -0.055       0.150       0.356       0.396       0.472
+    ZUFOV3          -0.498      -0.416      -0.373      -0.154       0.066       0.108       0.190
+    DSCAN           -0.192      -0.113      -0.073       0.138       0.349       0.389       0.468
+    SIMFAC          -0.368      -0.276      -0.228       0.018       0.265       0.312       0.405
+
+ ACC2     ON
+    SEX             -2.202      -1.858      -1.682      -0.761       0.159       0.335       0.680
+    AGE75           -0.154      -0.103      -0.077       0.059       0.195       0.221       0.272
+    VISFAC          -0.711      -0.520      -0.423       0.086       0.595       0.693       0.884
+    ZUFOV1          -2.031      -1.653      -1.459      -0.450       0.559       0.753       1.131
+    ZUFOV2          -1.828      -1.591      -1.470      -0.838      -0.205      -0.084       0.153
+    ZUFOV3          -1.063      -0.824      -0.701      -0.060       0.580       0.703       0.943
+    DSCAN           -1.292      -1.093      -0.991      -0.458       0.075       0.176       0.376
+    SIMFAC           0.063       0.397       0.568       1.461       2.353       2.524       2.858
+    LIMIT4          -1.465      -1.215      -1.087      -0.419       0.248       0.376       0.626
+
+ SPEED2   ON
+    SEX             -3.308      -2.849      -2.614      -1.388      -0.161       0.073       0.533
+    AGE75           -0.198      -0.166      -0.149      -0.064       0.022       0.038       0.070
+    VISFAC          -1.085      -0.870      -0.759      -0.183       0.393       0.503       0.719
+    ZUFOV1          -1.728      -1.429      -1.277      -0.478       0.320       0.472       0.771
+    ZUFOV2          -1.851      -1.477      -1.285      -0.286       0.713       0.904       1.278
+    ZUFOV3          -2.110      -1.879      -1.761      -1.143      -0.526      -0.407      -0.176
+    DSCAN           -0.365      -0.047       0.115       0.964       1.812       1.975       2.292
+    SIMFAC          -2.127      -1.701      -1.483      -0.346       0.792       1.010       1.435
+    LIMIT4          -1.604      -1.305      -1.152      -0.353       0.446       0.599       0.898
+
+ Means
+    RANDINT          0.000       0.000       0.000       0.000       0.000       0.000       0.000
+
+ Intercepts
+    SIMFAC          -0.348      -0.285      -0.252      -0.082       0.088       0.121       0.184
+    LIMIT4          -0.312      -0.219      -0.172       0.075       0.323       0.370       0.463
+
+ Thresholds
+    SPEED2$1         0.421       0.736       0.897       1.738       2.578       2.739       3.054
+    ACC2$1           0.676       1.004       1.172       2.050       2.927       3.095       3.423
+
+ Variances
+    RANDINT          0.036       0.039       0.041       0.049       0.058       0.060       0.063
+
+ Residual Variances
+    SIMFAC           0.307       0.345       0.364       0.465       0.565       0.584       0.622
+    LIMIT4           0.557       0.627       0.663       0.850       1.037       1.072       1.142
+
+New/Additional Parameters
+    DSTOACC         -0.131      -0.024       0.031       0.319       0.606       0.661       0.769
+
+
+CONFIDENCE INTERVALS FOR THE LOGISTIC REGRESSION ODDS RATIO RESULTS
+
+ ACC2     ON
+    SEX              0.111       0.156       0.186       0.467       1.172       1.398       1.973
+    AGE75            0.857       0.902       0.926       1.061       1.216       1.248       1.313
+    VISFAC           0.491       0.594       0.655       1.090       1.814       2.000       2.420
+    ZUFOV1           0.131       0.192       0.232       0.638       1.750       2.123       3.098
+    ZUFOV2           0.161       0.204       0.230       0.433       0.815       0.919       1.165
+    ZUFOV3           0.345       0.439       0.496       0.942       1.787       2.020       2.567
+    DSCAN            0.275       0.335       0.371       0.633       1.077       1.193       1.456
+    SIMFAC           1.065       1.487       1.765       4.309      10.520      12.481      17.432
+    LIMIT4           0.231       0.297       0.337       0.658       1.282       1.457       1.870
+
+ SPEED2   ON
+    SEX              0.037       0.058       0.073       0.250       0.851       1.076       1.703
+    AGE75            0.821       0.847       0.861       0.938       1.022       1.039       1.073
+    VISFAC           0.338       0.419       0.468       0.833       1.481       1.654       2.052
+    ZUFOV1           0.178       0.239       0.279       0.620       1.377       1.604       2.163
+    ZUFOV2           0.157       0.228       0.277       0.751       2.040       2.470       3.591
+    ZUFOV3           0.121       0.153       0.172       0.319       0.591       0.665       0.839
+    DSCAN            0.694       0.954       1.122       2.622       6.124       7.204       9.898
+    SIMFAC           0.119       0.182       0.227       0.708       2.207       2.744       4.202
+    LIMIT4           0.201       0.271       0.316       0.703       1.562       1.821       2.456
+
+
+CONFIDENCE INTERVALS OF STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ RANDINT  BY
+    SPEED2           0.045       0.056       0.062       0.092       0.123       0.128       0.140
+    ACC2             0.054       0.065       0.070       0.096       0.123       0.128       0.138
+
+ SIMFAC   ON
+    SEX             -0.140      -0.087      -0.061       0.078       0.218       0.244       0.296
+    AGE75           -0.284      -0.223      -0.191      -0.028       0.136       0.168       0.229
+    VISFAC          -0.322      -0.263      -0.233      -0.075       0.083       0.113       0.172
+    ZUFOV1          -0.290      -0.220      -0.184       0.002       0.189       0.225       0.295
+    ZUFOV2          -0.114      -0.039       0.000       0.201       0.402       0.441       0.516
+    ZUFOV3          -0.195      -0.114      -0.073       0.144       0.360       0.402       0.483
+    DSCAN           -0.040       0.035       0.073       0.272       0.471       0.509       0.583
+
+ LIMIT4   ON
+    SEX             -0.107      -0.046      -0.014       0.150       0.314       0.346       0.407
+    AGE75           -0.302      -0.232      -0.196      -0.009       0.178       0.214       0.284
+    VISFAC          -0.230      -0.172      -0.142       0.012       0.166       0.196       0.253
+    ZUFOV1          -0.209      -0.137      -0.100       0.091       0.283       0.320       0.391
+    ZUFOV2          -0.164      -0.089      -0.051       0.149       0.348       0.386       0.461
+    ZUFOV3          -0.523      -0.437      -0.393      -0.162       0.069       0.113       0.200
+    DSCAN           -0.198      -0.117      -0.076       0.140       0.356       0.398       0.479
+    SIMFAC          -0.300      -0.225      -0.186       0.015       0.216       0.255       0.330
+
+ ACC2     ON
+    SEX             -0.478      -0.403      -0.364      -0.163       0.038       0.076       0.152
+    AGE75           -0.329      -0.222      -0.167       0.121       0.408       0.463       0.571
+    VISFAC          -0.267      -0.196      -0.159       0.033       0.225       0.261       0.333
+    ZUFOV1          -0.746      -0.609      -0.539      -0.175       0.190       0.260       0.396
+    ZUFOV2          -0.726      -0.635      -0.588      -0.345      -0.101      -0.054       0.037
+    ZUFOV3          -0.464      -0.360      -0.306      -0.026       0.253       0.307       0.412
+    DSCAN           -0.536      -0.454      -0.413      -0.194       0.024       0.066       0.148
+    SIMFAC           0.136       0.222       0.267       0.497       0.728       0.772       0.858
+    LIMIT4          -0.584      -0.486      -0.436      -0.174       0.087       0.137       0.235
+
+ SPEED2   ON
+    SEX             -0.609      -0.532      -0.492      -0.284      -0.077      -0.037       0.040
+    AGE75           -0.379      -0.318      -0.287      -0.125       0.038       0.069       0.129
+    VISFAC          -0.381      -0.306      -0.268      -0.067       0.134       0.172       0.247
+    ZUFOV1          -0.582      -0.486      -0.436      -0.178       0.080       0.130       0.227
+    ZUFOV2          -0.691      -0.553      -0.482      -0.113       0.257       0.328       0.466
+    ZUFOV3          -0.880      -0.784      -0.735      -0.480      -0.224      -0.175      -0.080
+    DSCAN           -0.038       0.065       0.117       0.391       0.665       0.717       0.820
+    SIMFAC          -0.658      -0.527      -0.461      -0.113       0.235       0.302       0.432
+    LIMIT4          -0.659      -0.535      -0.471      -0.141       0.190       0.254       0.377
+
+ Means
+    RANDINT          0.000       0.000       0.000       0.000       0.000       0.000       0.000
+
+ Intercepts
+    SIMFAC          -0.446      -0.364      -0.323      -0.105       0.113       0.155       0.237
+    LIMIT4          -0.320      -0.225      -0.176       0.079       0.333       0.382       0.478
+
+ Thresholds
+    SPEED2$1         0.264       0.374       0.429       0.721       1.013       1.069       1.178
+    ACC2$1           0.376       0.499       0.562       0.889       1.216       1.279       1.402
+
+ Variances
+    RANDINT          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ Residual Variances
+    SIMFAC           0.547       0.596       0.622       0.754       0.887       0.912       0.962
+    LIMIT4           0.785       0.818       0.835       0.923       1.011       1.028       1.061
+
+
+     Beginning Time:  16:31:39
+        Ending Time:  16:31:41
+       Elapsed Time:  00:00:02
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen

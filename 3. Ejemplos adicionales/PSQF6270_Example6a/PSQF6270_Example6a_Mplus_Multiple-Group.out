@@ -1,0 +1,1146 @@
+Mplus VERSION 8.8
+MUTHEN & MUTHEN
+04/24/2023   9:23 AM
+
+INPUT INSTRUCTIONS
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MPLUS ONLY READS 90 CHARACTERS ACROSS !!!!!!!!!!!!!!!!!!
+
+  TITLE:  Mplus Example 6a Multiple-Group Path Model with Indirect Effects
+  DATA:   FILE = Mindful.csv;       ! Can just list file name if data are in same folder
+          FORMAT = free;            ! FREE (default) or FIXED format
+          TYPE = individual;        ! Individual (default) or matrix data as input
+  VARIABLE:
+  ! Names of all variables in data set
+    NAMES = ID SexMW MindC Intern Extern Hostile Benev Warmth;
+  ! Names of all variables in model
+    USEVARIABLES = SexMW MindC Intern Extern Hostile Benev Warmth;
+  ! Missing data indicator
+    MISSING = ALL(-999);
+  ! Grouping variable for multiple group analysis
+    GROUPING = SexMW (0=Men, 1=Women);
+
+  ANALYSIS:   TYPE = GENERAL;          ! For path models
+              ESTIMATOR = MLR;         ! Robust ML (cannot use with bootstrapping)
+              !BOOTSTRAP IS 1000;      ! Bootstrapping for indirect effects
+  OUTPUT:     STDYX;                   ! Standardized solution
+              !MODINDICES (3.84);      ! Cheat codes to improve model fit (not with CONSTRAI
+              CINTERVAL;               ! Confidence interval for indirect effects
+              !CINTERVAL(BCBOOTSTRAP); ! Bootstrap CI for indirect effects (not with MLR)
+
+  ! Model code: ON = Y ON X, WITH = covariance (labels to do math on or create constraints)
+  MODEL:
+  ! Bring X into the likelihood by estimating its mean and variance in empty model
+    [MindC] (mXint); MindC (mXvar);
+  ! Intercepts and residual variances for other variables
+    [Intern Extern Hostile Benev Warmth] (mM1int mM2int mM3int mM4int mYint);
+     Intern Extern Hostile Benev Warmth  (mM1var mM2var mM3var mM4var mYvar);
+  ! Direct MindC --> Warmth
+    Warmth ON MindC (mXtoY);
+  ! Left side of model
+    Intern Extern Hostile Benev ON MindC (mXtoM1 mXtoM2 mXtoM3 mXtoM4);
+  ! Right side of model
+    Warmth ON Intern Extern Hostile Benev (mM1toY mM2toY mM3toY mM4toY);
+  ! All possible residual covariances among mediator variables (not labeled)
+    Intern Extern Hostile Benev WITH Intern Extern Hostile Benev;
+
+  MODEL Women:
+  ! Bring X into the likelihood by estimating its mean and variance in empty model
+    [MindC] (wXint); MindC (wXvar);
+  ! Intercepts and residual variances for other variables
+    [Intern Extern Hostile Benev Warmth] (wM1int wM2int wM3int wM4int wYint);
+     Intern Extern Hostile Benev Warmth  (wM1var wM2var wM3var wM4var wYvar);
+  ! Direct MindC --> Warmth
+    Warmth ON MindC (wXtoY);
+  ! Left side of model
+    Intern Extern Hostile Benev ON MindC (wXtoM1 wXtoM2 wXtoM3 wXtoM4);
+  ! Right side of model
+    Warmth ON Intern Extern Hostile Benev (wM1toY wM2toY wM3toY wM4toY);
+  ! All possible residual covariances among mediator variables (not labeled)
+    Intern Extern Hostile Benev WITH Intern Extern Hostile Benev;
+
+  ! First list newly created parameters to be defined below
+  MODEL CONSTRAINT:
+    NEW (mXtoM1Y mXtoM2Y mXtoM3Y mXtoM4Y wXtoM1Y wXtoM2Y wXtoM3Y wXtoM4Y
+         mtotXtoY mtotInd wtotXtoY wtotInd
+         dXtoM1 dXtoM2 dXtoM3 dXtoM4 dM1toY dM2toY dM3toY dM4toY
+         dXtoM1Y dXtoM2Y dXtoM3Y dXtoM4Y dtotXtoY dtotInd);
+  ! Indirect effects for both groups
+    mXtoM1Y = mXtoM1*mM1toY; wXtoM1Y = wXtoM1*wM1toY;
+    mXtoM2Y = mXtoM2*mM2toY; wXtoM2Y = wXtoM2*wM2toY;
+    mXtoM3Y = mXtoM3*mM3toY; wXtoM3Y = wXtoM3*wM3toY;
+    mXtoM4Y = mXtoM4*mM4toY; wXtoM4Y = wXtoM4*wM4toY;
+  ! Total indirect+direct and total indirect effects for both groups
+    mtotXtoY = mXtoM1Y + mXtoM2Y + mXtoM3Y + mXtoM4Y + mXtoY;
+    mtotInd  = mXtoM1Y + mXtoM2Y + mXtoM3Y + mXtoM4Y;
+    wtotXtoY = wXtoM1Y + wXtoM2Y + wXtoM3Y + wXtoM4Y + wXtoY;
+    wtotInd  = wXtoM1Y + wXtoM2Y + wXtoM3Y + wXtoM4Y;
+  ! Differences in direct effects across groups
+    dXtoM1 = mXtoM1-wXtoM1; dXtoM2 = mXtoM2-wXtoM2;
+    dXtoM3 = mXtoM3-wXtoM3; dXtoM4 = mXtoM4-wXtoM4;
+    dM1toY = mM1toY-wM1toY; dM2toY = mM2toY-wM2toY;
+    dM3toY = mM3toY-wM3toY; dM4toY = mM4toY-wM4toY;
+  ! Differences in indirect effects across groups
+    dXtoM1Y = mXtoM1Y-wXtoM1Y; dXtoM2Y = mXtoM2Y-wXtoM2Y;
+    dXtoM3Y = mXtoM3Y-wXtoM3Y; dXtoM4Y = mXtoM4Y-wXtoM4Y;
+  ! Differences in total indirect+direct and total indirect effects across groups
+    dtotXtoY = mtotXtoY-wtotXtoY; dtotInd = mtotInd-wtotInd;
+
+  ! Get all indirect and total effects between Y IND X
+  MODEL INDIRECT: ! Only available for MVN outcomes
+    Warmth IND MindC;
+
+
+
+
+*** WARNING
+  Input line exceeded 90 characters. Some input may be truncated.
+              !MODINDICES (3.84);      ! Cheat codes to improve model fit (not with CONSTRAIN
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Mplus Example 6a Multiple-Group Path Model with Indirect Effects
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 2
+Number of observations
+   Group MEN                                                   273
+   Group WOMEN                                                 380
+   Total sample size                                           653
+
+Number of dependent variables                                    5
+Number of independent variables                                  1
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   INTERN      EXTERN      HOSTILE     BENEV       WARMTH
+
+Observed independent variables
+   MINDC
+
+Variables with special functions
+
+  Grouping variable     SEXMW
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  Mindful.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+   Group MEN
+     Number of missing data patterns             3
+
+   Group WOMEN
+     Number of missing data patterns             3
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR MEN
+
+
+           Covariance Coverage
+              INTERN        EXTERN        HOSTILE       BENEV         WARMTH
+              ________      ________      ________      ________      ________
+ INTERN         1.000
+ EXTERN         0.996         0.996
+ HOSTILE        1.000         0.996         1.000
+ BENEV          1.000         0.996         1.000         1.000
+ WARMTH         0.982         0.978         0.982         0.982         0.982
+ MINDC          1.000         0.996         1.000         1.000         0.982
+
+
+           Covariance Coverage
+              MINDC
+              ________
+ MINDC          1.000
+
+
+     PROPORTION OF DATA PRESENT FOR WOMEN
+
+
+           Covariance Coverage
+              INTERN        EXTERN        HOSTILE       BENEV         WARMTH
+              ________      ________      ________      ________      ________
+ INTERN         1.000
+ EXTERN         0.995         0.995
+ HOSTILE        1.000         0.995         1.000
+ BENEV          1.000         0.995         1.000         1.000
+ WARMTH         0.997         0.992         0.997         0.997         0.997
+ MINDC          1.000         0.995         1.000         1.000         0.997
+
+
+           Covariance Coverage
+              MINDC
+              ________
+ MINDC          1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS FOR MEN
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     INTERN                4.908      -0.441       1.000    0.37%       3.800      4.600      5.000
+             273.000       1.932      -0.363       7.000    8.42%       5.400      6.200
+     EXTERN                4.098      -0.148       1.000    1.47%       3.000      4.000      4.000
+             272.000       1.532      -0.140       7.000    0.74%       4.400      5.000
+     HOSTILE               4.194       0.409       1.636    0.37%       3.545      3.909      4.091
+             273.000       0.790       0.531       6.818    0.37%       4.273      4.909
+     BENEV                 4.203      -0.109       1.455    0.37%       3.636      4.000      4.182
+             273.000       0.642       0.590       6.364    0.37%       4.364      4.818
+     WARMTH                5.662       0.059       1.000    5.97%       3.500      5.000      5.750
+             268.000       5.855      -0.319      11.000    3.36%       6.000      7.500
+     MINDC                 0.817      -0.356      -0.857    0.37%       0.429      0.714      0.786
+             273.000       0.187       0.718       1.786    1.10%       0.929      1.143
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS FOR WOMEN
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     INTERN                5.497      -0.581       2.200    0.53%       4.400      5.400      5.800
+             380.000       1.475      -0.636       7.000   14.21%       6.000      6.600
+     EXTERN                4.105      -0.087       1.000    0.79%       3.200      4.000      4.000
+             378.000       1.433       0.044       7.000    1.32%       4.400      5.000
+     HOSTILE               3.699      -0.303       1.364    0.26%       3.167      3.545      3.727
+             380.000       0.552       0.299       5.818    0.26%       3.909      4.273
+     BENEV                 3.966      -0.096       1.455    0.26%       3.364      3.818      3.909
+             380.000       0.587       0.351       6.273    0.26%       4.091      4.636
+     WARMTH                7.266      -0.314       1.000    0.79%       5.500      7.000      7.500
+             379.000       4.855      -0.238      11.000    6.60%       8.000      9.000
+     MINDC                 0.847      -0.245      -0.786    0.26%       0.500      0.714      0.857
+             380.000       0.200       0.234       2.000    0.26%       0.929      1.286
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       54
+
+Loglikelihood
+
+          H0 Value                       -5332.207
+          H0 Scaling Correction Factor      1.0648
+            for MLR
+          H1 Value                       -5332.207
+          H1 Scaling Correction Factor      1.0648
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   10772.414
+          Bayesian (BIC)                 11014.420
+          Sample-Size Adjusted BIC       10842.970
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                              0.000*
+          Degrees of Freedom                     0
+          P-Value                           0.0000
+          Scaling Correction Factor         1.0000
+            for MLR
+
+Chi-Square Contribution From Each Group
+
+          MEN                                0.000
+          WOMEN                              0.000
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.000
+          90 Percent C.I.                    0.000  0.000
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                1.000
+          TLI                                1.000
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            363.319
+          Degrees of Freedom                    30
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.000
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Group MEN
+
+ WARMTH   ON
+    MINDC              0.213      0.364      0.585      0.558
+    INTERN             0.548      0.107      5.127      0.000
+    EXTERN             0.047      0.109      0.433      0.665
+    HOSTILE           -0.845      0.155     -5.454      0.000
+    BENEV             -0.158      0.168     -0.937      0.349
+
+ INTERN   ON
+    MINDC              0.633      0.199      3.179      0.001
+
+ EXTERN   ON
+    MINDC              0.273      0.166      1.648      0.099
+
+ HOSTILE  ON
+    MINDC             -0.171      0.126     -1.357      0.175
+
+ BENEV    ON
+    MINDC             -0.314      0.111     -2.829      0.005
+
+ INTERN   WITH
+    EXTERN             0.640      0.132      4.857      0.000
+    HOSTILE           -0.475      0.088     -5.406      0.000
+    BENEV              0.107      0.074      1.445      0.148
+
+ EXTERN   WITH
+    HOSTILE            0.058      0.077      0.750      0.453
+    BENEV              0.154      0.067      2.299      0.021
+
+ HOSTILE  WITH
+    BENEV              0.036      0.048      0.742      0.458
+
+ Means
+    MINDC              0.817      0.026     31.181      0.000
+
+ Intercepts
+    INTERN             4.391      0.185     23.735      0.000
+    EXTERN             3.871      0.158     24.499      0.000
+    HOSTILE            4.334      0.113     38.332      0.000
+    BENEV              4.460      0.093     48.212      0.000
+    WARMTH             6.814      1.258      5.418      0.000
+
+ Variances
+    MINDC              0.187      0.019     10.023      0.000
+
+ Residual Variances
+    INTERN             1.857      0.147     12.667      0.000
+    EXTERN             1.522      0.126     12.056      0.000
+    HOSTILE            0.784      0.076     10.385      0.000
+    BENEV              0.623      0.059     10.504      0.000
+    WARMTH             4.124      0.394     10.465      0.000
+
+Group WOMEN
+
+ WARMTH   ON
+    MINDC             -0.126      0.254     -0.498      0.618
+    INTERN             0.449      0.105      4.264      0.000
+    EXTERN             0.084      0.099      0.841      0.401
+    HOSTILE           -0.535      0.161     -3.328      0.001
+    BENEV             -0.159      0.151     -1.054      0.292
+
+ INTERN   ON
+    MINDC              0.099      0.146      0.676      0.499
+
+ EXTERN   ON
+    MINDC             -0.117      0.133     -0.874      0.382
+
+ HOSTILE  ON
+    MINDC             -0.181      0.081     -2.250      0.024
+
+ BENEV    ON
+    MINDC              0.138      0.079      1.762      0.078
+
+ INTERN   WITH
+    EXTERN             0.556      0.085      6.556      0.000
+    HOSTILE           -0.184      0.047     -3.900      0.000
+    BENEV             -0.012      0.050     -0.233      0.816
+
+ EXTERN   WITH
+    HOSTILE            0.023      0.044      0.522      0.602
+    BENEV              0.157      0.052      3.000      0.003
+
+ HOSTILE  WITH
+    BENEV              0.118      0.032      3.656      0.000
+
+ Means
+    MINDC              0.847      0.023     36.886      0.000
+
+ Intercepts
+    INTERN             5.414      0.138     39.269      0.000
+    EXTERN             4.200      0.125     33.482      0.000
+    HOSTILE            3.853      0.077     50.063      0.000
+    BENEV              3.848      0.074     51.657      0.000
+    WARMTH             7.172      1.081      6.633      0.000
+
+ Variances
+    MINDC              0.200      0.015     13.042      0.000
+
+ Residual Variances
+    INTERN             1.473      0.089     16.634      0.000
+    EXTERN             1.433      0.105     13.603      0.000
+    HOSTILE            0.545      0.043     12.743      0.000
+    BENEV              0.583      0.046     12.659      0.000
+    WARMTH             4.230      0.303     13.972      0.000
+
+New/Additional Parameters
+    MXTOM1Y            0.347      0.126      2.750      0.006
+    MXTOM2Y            0.013      0.030      0.434      0.665
+    MXTOM3Y            0.145      0.111      1.300      0.194
+    MXTOM4Y            0.050      0.058      0.855      0.393
+    WXTOM1Y            0.044      0.066      0.671      0.502
+    WXTOM2Y           -0.010      0.015     -0.644      0.520
+    WXTOM3Y            0.097      0.053      1.846      0.065
+    WXTOM4Y           -0.022      0.024     -0.937      0.349
+    MTOTXTOY           0.768      0.402      1.910      0.056
+    MTOTIND            0.554      0.204      2.717      0.007
+    WTOTXTOY          -0.017      0.257     -0.066      0.948
+    WTOTIND            0.109      0.097      1.127      0.260
+    DXTOM1             0.535      0.247      2.166      0.030
+    DXTOM2             0.389      0.213      1.831      0.067
+    DXTOM3             0.010      0.150      0.066      0.948
+    DXTOM4            -0.452      0.136     -3.327      0.001
+    DM1TOY             0.099      0.150      0.661      0.509
+    DM2TOY            -0.036      0.148     -0.245      0.806
+    DM3TOY            -0.310      0.223     -1.390      0.164
+    DM4TOY             0.001      0.226      0.006      0.995
+    DXTOM1Y            0.303      0.142      2.126      0.034
+    DXTOM2Y            0.023      0.033      0.678      0.498
+    DXTOM3Y            0.048      0.123      0.389      0.697
+    DXTOM4Y            0.072      0.063      1.144      0.253
+    DTOTXTOY           0.784      0.477      1.644      0.100
+    DTOTIND            0.445      0.226      1.969      0.049
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.122E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Group MEN
+
+ WARMTH   ON
+    MINDC              0.038      0.065      0.585      0.559
+    INTERN             0.316      0.061      5.154      0.000
+    EXTERN             0.024      0.056      0.435      0.664
+    HOSTILE           -0.311      0.058     -5.405      0.000
+    BENEV             -0.052      0.056     -0.936      0.349
+
+ INTERN   ON
+    MINDC              0.197      0.060      3.313      0.001
+
+ EXTERN   ON
+    MINDC              0.095      0.058      1.649      0.099
+
+ HOSTILE  ON
+    MINDC             -0.084      0.060     -1.386      0.166
+
+ BENEV    ON
+    MINDC             -0.170      0.056     -3.009      0.003
+
+ INTERN   WITH
+    EXTERN             0.380      0.064      5.947      0.000
+    HOSTILE           -0.393      0.057     -6.908      0.000
+    BENEV              0.099      0.067      1.472      0.141
+
+ EXTERN   WITH
+    HOSTILE            0.053      0.071      0.748      0.454
+    BENEV              0.158      0.068      2.331      0.020
+
+ HOSTILE  WITH
+    BENEV              0.051      0.069      0.744      0.457
+
+ Means
+    MINDC              1.887      0.122     15.415      0.000
+
+ Intercepts
+    INTERN             3.159      0.209     15.094      0.000
+    EXTERN             3.123      0.195     15.986      0.000
+    HOSTILE            4.877      0.240     20.330      0.000
+    BENEV              5.567      0.260     21.432      0.000
+    WARMTH             2.823      0.540      5.223      0.000
+
+ Variances
+    MINDC              1.000      0.000    999.000    999.000
+
+ Residual Variances
+    INTERN             0.961      0.023     40.933      0.000
+    EXTERN             0.991      0.011     90.054      0.000
+    HOSTILE            0.993      0.010     98.673      0.000
+    BENEV              0.971      0.019     50.837      0.000
+    WARMTH             0.708      0.051     13.980      0.000
+
+Group WOMEN
+
+ WARMTH   ON
+    MINDC             -0.026      0.052     -0.498      0.618
+    INTERN             0.247      0.056      4.407      0.000
+    EXTERN             0.045      0.054      0.839      0.401
+    HOSTILE           -0.180      0.053     -3.432      0.001
+    BENEV             -0.055      0.052     -1.057      0.290
+
+ INTERN   ON
+    MINDC              0.036      0.054      0.677      0.498
+
+ EXTERN   ON
+    MINDC             -0.044      0.050     -0.874      0.382
+
+ HOSTILE  ON
+    MINDC             -0.109      0.048     -2.280      0.023
+
+ BENEV    ON
+    MINDC              0.081      0.046      1.761      0.078
+
+ INTERN   WITH
+    EXTERN             0.383      0.048      7.996      0.000
+    HOSTILE           -0.205      0.050     -4.125      0.000
+    BENEV             -0.013      0.054     -0.233      0.816
+
+ EXTERN   WITH
+    HOSTILE            0.026      0.050      0.523      0.601
+    BENEV              0.171      0.053      3.211      0.001
+
+ HOSTILE  WITH
+    BENEV              0.210      0.054      3.872      0.000
+
+ Means
+    MINDC              1.892      0.095     19.818      0.000
+
+ Intercepts
+    INTERN             4.457      0.194     23.002      0.000
+    EXTERN             3.504      0.162     21.626      0.000
+    HOSTILE            5.185      0.228     22.738      0.000
+    BENEV              5.025      0.229     21.920      0.000
+    WARMTH             3.256      0.503      6.468      0.000
+
+ Variances
+    MINDC              1.000      0.000    999.000    999.000
+
+ Residual Variances
+    INTERN             0.999      0.004    256.053      0.000
+    EXTERN             0.998      0.004    229.598      0.000
+    HOSTILE            0.988      0.010     94.345      0.000
+    BENEV              0.993      0.007    133.686      0.000
+    WARMTH             0.872      0.034     25.603      0.000
+
+
+R-SQUARE
+
+Group MEN
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    INTERN             0.039      0.023      1.656      0.098
+    EXTERN             0.009      0.011      0.825      0.410
+    HOSTILE            0.007      0.010      0.693      0.488
+    BENEV              0.029      0.019      1.504      0.133
+    WARMTH             0.292      0.051      5.777      0.000
+
+Group WOMEN
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    INTERN             0.001      0.004      0.339      0.735
+    EXTERN             0.002      0.004      0.437      0.662
+    HOSTILE            0.012      0.010      1.140      0.254
+    BENEV              0.007      0.007      0.880      0.379
+    WARMTH             0.128      0.034      3.772      0.000
+
+
+TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Group MEN
+
+Effects from MINDC to WARMTH
+
+  Total                0.768      0.402      1.910      0.056
+  Total indirect       0.554      0.204      2.717      0.007
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC              0.347      0.126      2.750      0.006
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC              0.013      0.030      0.434      0.665
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC              0.145      0.111      1.300      0.194
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC              0.050      0.058      0.855      0.393
+
+  Direct
+    WARMTH
+    MINDC              0.213      0.364      0.585      0.558
+
+
+Group WOMEN
+
+Effects from MINDC to WARMTH
+
+  Total               -0.017      0.257     -0.066      0.948
+  Total indirect       0.109      0.097      1.127      0.260
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC              0.044      0.066      0.671      0.502
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC             -0.010      0.015     -0.644      0.520
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC              0.097      0.053      1.846      0.065
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC             -0.022      0.024     -0.937      0.349
+
+  Direct
+    WARMTH
+    MINDC             -0.126      0.254     -0.498      0.618
+
+
+
+STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Group MEN
+
+Effects from MINDC to WARMTH
+
+  Total                0.138      0.071      1.934      0.053
+  Total indirect       0.099      0.035      2.826      0.005
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC              0.062      0.022      2.822      0.005
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC              0.002      0.005      0.434      0.664
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC              0.026      0.020      1.323      0.186
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC              0.009      0.010      0.857      0.392
+
+  Direct
+    WARMTH
+    MINDC              0.038      0.065      0.585      0.559
+
+
+Group WOMEN
+
+Effects from MINDC to WARMTH
+
+  Total               -0.003      0.052     -0.066      0.948
+  Total indirect       0.022      0.020      1.131      0.258
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC              0.009      0.013      0.671      0.502
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC             -0.002      0.003     -0.643      0.520
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC              0.020      0.011      1.860      0.063
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC             -0.004      0.005     -0.938      0.348
+
+  Direct
+    WARMTH
+    MINDC             -0.026      0.052     -0.498      0.618
+
+
+
+
+CONFIDENCE INTERVALS OF MODEL RESULTS
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+Group MEN
+
+ WARMTH   ON
+    MINDC           -0.725      -0.501      -0.386       0.213       0.812       0.927       1.152
+    INTERN           0.273       0.339       0.372       0.548       0.724       0.757       0.823
+    EXTERN          -0.234      -0.167      -0.132       0.047       0.227       0.262       0.329
+    HOSTILE         -1.244      -1.149      -1.100      -0.845      -0.590      -0.541      -0.446
+    BENEV           -0.592      -0.488      -0.435      -0.158       0.119       0.172       0.276
+
+ INTERN   ON
+    MINDC            0.120       0.243       0.306       0.633       0.961       1.024       1.147
+
+ EXTERN   ON
+    MINDC           -0.154      -0.052       0.000       0.273       0.545       0.597       0.699
+
+ HOSTILE  ON
+    MINDC           -0.497      -0.419      -0.379      -0.171       0.036       0.076       0.154
+
+ BENEV    ON
+    MINDC           -0.599      -0.531      -0.496      -0.314      -0.131      -0.096      -0.028
+
+ INTERN   WITH
+    EXTERN           0.300       0.382       0.423       0.640       0.856       0.898       0.979
+    HOSTILE         -0.701      -0.647      -0.619      -0.475      -0.330      -0.303      -0.248
+    BENEV           -0.084      -0.038      -0.015       0.107       0.229       0.252       0.297
+
+ EXTERN   WITH
+    HOSTILE         -0.141      -0.093      -0.069       0.058       0.185       0.209       0.257
+    BENEV           -0.019       0.023       0.044       0.154       0.264       0.285       0.327
+
+ HOSTILE  WITH
+    BENEV           -0.089      -0.059      -0.044       0.036       0.115       0.131       0.160
+
+ Means
+    MINDC            0.749       0.766       0.774       0.817       0.860       0.868       0.884
+
+ Intercepts
+    INTERN           3.915       4.028       4.087       4.391       4.695       4.754       4.868
+    EXTERN           3.464       3.561       3.611       3.871       4.131       4.180       4.278
+    HOSTILE          4.043       4.112       4.148       4.334       4.520       4.555       4.625
+    BENEV            4.221       4.278       4.308       4.460       4.612       4.641       4.698
+    WARMTH           3.575       4.349       4.746       6.814       8.883       9.280      10.054
+
+ Variances
+    MINDC            0.139       0.151       0.157       0.187       0.218       0.224       0.236
+
+ Residual Variances
+    INTERN           1.479       1.570       1.616       1.857       2.098       2.144       2.235
+    EXTERN           1.197       1.275       1.314       1.522       1.730       1.770       1.847
+    HOSTILE          0.590       0.636       0.660       0.784       0.909       0.932       0.979
+    BENEV            0.470       0.507       0.526       0.623       0.721       0.740       0.776
+    WARMTH           3.109       3.352       3.476       4.124       4.773       4.897       5.139
+
+Group WOMEN
+
+ WARMTH   ON
+    MINDC           -0.780      -0.624      -0.544      -0.126       0.291       0.371       0.527
+    INTERN           0.178       0.243       0.276       0.449       0.622       0.655       0.720
+    EXTERN          -0.173      -0.111      -0.080       0.084       0.247       0.279       0.340
+    HOSTILE         -0.949      -0.850      -0.799      -0.535      -0.270      -0.220      -0.121
+    BENEV           -0.548      -0.455      -0.407      -0.159       0.089       0.137       0.230
+
+ INTERN   ON
+    MINDC           -0.277      -0.187      -0.141       0.099       0.338       0.384       0.474
+
+ EXTERN   ON
+    MINDC           -0.460      -0.378      -0.336      -0.117       0.103       0.145       0.227
+
+ HOSTILE  ON
+    MINDC           -0.389      -0.339      -0.314      -0.181      -0.049      -0.023       0.026
+
+ BENEV    ON
+    MINDC           -0.064      -0.016       0.009       0.138       0.268       0.292       0.341
+
+ INTERN   WITH
+    EXTERN           0.338       0.390       0.416       0.556       0.695       0.722       0.774
+    HOSTILE         -0.305      -0.276      -0.261      -0.184      -0.106      -0.091      -0.062
+    BENEV           -0.140      -0.110      -0.094      -0.012       0.071       0.086       0.117
+
+ EXTERN   WITH
+    HOSTILE         -0.091      -0.063      -0.050       0.023       0.096       0.110       0.137
+    BENEV            0.022       0.054       0.071       0.157       0.243       0.259       0.291
+
+ HOSTILE  WITH
+    BENEV            0.035       0.055       0.065       0.118       0.172       0.182       0.202
+
+ Means
+    MINDC            0.788       0.802       0.809       0.847       0.885       0.892       0.906
+
+ Intercepts
+    INTERN           5.059       5.143       5.187       5.414       5.640       5.684       5.769
+    EXTERN           3.876       3.954       3.993       4.200       4.406       4.445       4.523
+    HOSTILE          3.654       3.702       3.726       3.853       3.979       4.003       4.051
+    BENEV            3.657       3.702       3.726       3.848       3.971       3.994       4.040
+    WARMTH           4.387       5.053       5.394       7.172       8.951       9.292       9.957
+
+ Variances
+    MINDC            0.161       0.170       0.175       0.200       0.226       0.231       0.240
+
+ Residual Variances
+    INTERN           1.245       1.300       1.328       1.473       1.619       1.647       1.702
+    EXTERN           1.162       1.227       1.260       1.433       1.607       1.640       1.705
+    HOSTILE          0.435       0.462       0.475       0.545       0.616       0.629       0.656
+    BENEV            0.464       0.493       0.507       0.583       0.659       0.673       0.701
+    WARMTH           3.450       3.637       3.732       4.230       4.728       4.824       5.010
+
+New/Additional Parameters
+    MXTOM1Y          0.022       0.100       0.139       0.347       0.555       0.594       0.672
+    MXTOM2Y         -0.064      -0.045      -0.036       0.013       0.062       0.071       0.090
+    MXTOM3Y         -0.142      -0.074      -0.038       0.145       0.328       0.363       0.432
+    MXTOM4Y         -0.100      -0.064      -0.046       0.050       0.145       0.163       0.199
+    WXTOM1Y         -0.126      -0.085      -0.064       0.044       0.153       0.174       0.214
+    WXTOM2Y         -0.049      -0.039      -0.035      -0.010       0.015       0.020       0.029
+    WXTOM3Y         -0.038      -0.006       0.011       0.097       0.183       0.200       0.232
+    WXTOM4Y         -0.083      -0.068      -0.061      -0.022       0.017       0.024       0.039
+    MTOTXTOY        -0.268      -0.020       0.106       0.768       1.429       1.555       1.803
+    MTOTIND          0.029       0.154       0.219       0.554       0.890       0.954       1.080
+    WTOTXTOY        -0.679      -0.521      -0.440      -0.017       0.406       0.487       0.645
+    WTOTIND         -0.141      -0.081      -0.050       0.109       0.269       0.300       0.360
+    DXTOM1          -0.101       0.051       0.129       0.535       0.941       1.019       1.171
+    DXTOM2          -0.158      -0.027       0.040       0.389       0.739       0.806       0.937
+    DXTOM3          -0.376      -0.284      -0.237       0.010       0.256       0.304       0.396
+    DXTOM4          -0.802      -0.719      -0.676      -0.452      -0.229      -0.186      -0.102
+    DM1TOY          -0.287      -0.195      -0.148       0.099       0.346       0.393       0.486
+    DM2TOY          -0.417      -0.326      -0.279      -0.036       0.207       0.253       0.344
+    DM3TOY          -0.885      -0.748      -0.678      -0.310       0.057       0.127       0.265
+    DM4TOY          -0.581      -0.442      -0.371       0.001       0.373       0.445       0.584
+    DXTOM1Y         -0.064       0.024       0.068       0.303       0.537       0.582       0.670
+    DXTOM2Y         -0.063      -0.043      -0.032       0.023       0.078       0.088       0.109
+    DXTOM3Y         -0.270      -0.194      -0.155       0.048       0.251       0.290       0.365
+    DXTOM4Y         -0.090      -0.051      -0.031       0.072       0.174       0.194       0.233
+    DTOTXTOY        -0.444      -0.151       0.000       0.784       1.569       1.720       2.013
+    DTOTIND         -0.137       0.002       0.073       0.445       0.817       0.888       1.027
+
+
+CONFIDENCE INTERVALS OF STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+Group MEN
+
+ WARMTH   ON
+    MINDC           -0.130      -0.090      -0.069       0.038       0.146       0.166       0.207
+    INTERN           0.158       0.196       0.215       0.316       0.416       0.436       0.473
+    EXTERN          -0.120      -0.085      -0.068       0.024       0.116       0.134       0.168
+    HOSTILE         -0.459      -0.424      -0.406      -0.311      -0.216      -0.198      -0.163
+    BENEV           -0.196      -0.162      -0.144      -0.052       0.040       0.057       0.092
+
+ INTERN   ON
+    MINDC            0.044       0.081       0.099       0.197       0.295       0.314       0.351
+
+ EXTERN   ON
+    MINDC           -0.054      -0.018       0.000       0.095       0.190       0.208       0.244
+
+ HOSTILE  ON
+    MINDC           -0.239      -0.202      -0.183      -0.084       0.016       0.035       0.072
+
+ BENEV    ON
+    MINDC           -0.315      -0.280      -0.262      -0.170      -0.077      -0.059      -0.024
+
+ INTERN   WITH
+    EXTERN           0.216       0.255       0.275       0.380       0.486       0.506       0.545
+    HOSTILE         -0.540      -0.505      -0.487      -0.393      -0.300      -0.282      -0.247
+    BENEV           -0.074      -0.033      -0.012       0.099       0.210       0.232       0.273
+
+ EXTERN   WITH
+    HOSTILE         -0.130      -0.086      -0.064       0.053       0.170       0.192       0.236
+    BENEV           -0.017       0.025       0.047       0.158       0.270       0.291       0.333
+
+ HOSTILE  WITH
+    BENEV           -0.126      -0.084      -0.062       0.051       0.165       0.186       0.229
+
+ Means
+    MINDC            1.572       1.647       1.686       1.887       2.089       2.127       2.202
+
+ Intercepts
+    INTERN           2.620       2.749       2.815       3.159       3.503       3.569       3.698
+    EXTERN           2.620       2.740       2.802       3.123       3.445       3.506       3.626
+    HOSTILE          4.259       4.406       4.482       4.877       5.271       5.347       5.495
+    BENEV            4.898       5.058       5.140       5.567       5.995       6.076       6.236
+    WARMTH           1.431       1.763       1.934       2.823       3.712       3.882       4.215
+
+ Variances
+    MINDC            1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ Residual Variances
+    INTERN           0.901       0.915       0.922       0.961       1.000       1.007       1.022
+    EXTERN           0.963       0.969       0.973       0.991       1.009       1.012       1.019
+    HOSTILE          0.967       0.973       0.976       0.993       1.010       1.013       1.019
+    BENEV            0.922       0.934       0.940       0.971       1.003       1.009       1.020
+    WARMTH           0.577       0.608       0.624       0.708       0.791       0.807       0.838
+
+Group WOMEN
+
+ WARMTH   ON
+    MINDC           -0.158      -0.127      -0.110      -0.026       0.059       0.075       0.107
+    INTERN           0.103       0.137       0.155       0.247       0.340       0.358       0.392
+    EXTERN          -0.094      -0.061      -0.044       0.045       0.135       0.152       0.185
+    HOSTILE         -0.316      -0.283      -0.267      -0.180      -0.094      -0.077      -0.045
+    BENEV           -0.190      -0.158      -0.141      -0.055       0.031       0.047       0.079
+
+ INTERN   ON
+    MINDC           -0.102      -0.069      -0.052       0.036       0.125       0.142       0.175
+
+ EXTERN   ON
+    MINDC           -0.172      -0.141      -0.126      -0.044       0.038       0.054       0.085
+
+ HOSTILE  ON
+    MINDC           -0.233      -0.203      -0.188      -0.109      -0.030      -0.015       0.014
+
+ BENEV    ON
+    MINDC           -0.037      -0.009       0.005       0.081       0.156       0.171       0.199
+
+ INTERN   WITH
+    EXTERN           0.259       0.289       0.304       0.383       0.461       0.476       0.506
+    HOSTILE         -0.333      -0.302      -0.287      -0.205      -0.123      -0.108      -0.077
+    BENEV           -0.152      -0.118      -0.101      -0.013       0.076       0.093       0.126
+
+ EXTERN   WITH
+    HOSTILE         -0.102      -0.072      -0.056       0.026       0.108       0.124       0.154
+    BENEV            0.034       0.067       0.084       0.171       0.259       0.276       0.309
+
+ HOSTILE  WITH
+    BENEV            0.070       0.104       0.121       0.210       0.299       0.316       0.350
+
+ Means
+    MINDC            1.646       1.705       1.735       1.892       2.049       2.079       2.138
+
+ Intercepts
+    INTERN           3.958       4.077       4.138       4.457       4.776       4.837       4.956
+    EXTERN           3.087       3.187       3.238       3.504       3.771       3.822       3.922
+    HOSTILE          4.598       4.738       4.810       5.185       5.560       5.632       5.773
+    BENEV            4.434       4.575       4.647       5.025       5.402       5.474       5.615
+    WARMTH           1.959       2.269       2.428       3.256       4.084       4.242       4.552
+
+ Variances
+    MINDC            1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ Residual Variances
+    INTERN           0.989       0.991       0.992       0.999       1.005       1.006       1.009
+    EXTERN           0.987       0.990       0.991       0.998       1.005       1.007       1.009
+    HOSTILE          0.961       0.968       0.971       0.988       1.005       1.009       1.015
+    BENEV            0.974       0.979       0.981       0.993       1.006       1.008       1.013
+    WARMTH           0.784       0.805       0.816       0.872       0.928       0.938       0.959
+
+
+CONFIDENCE INTERVALS OF TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+Group MEN
+
+Effects from MINDC to WARMTH
+
+  Total             -0.268      -0.020       0.106       0.768       1.429       1.555       1.803
+  Total indirect     0.029       0.154       0.219       0.554       0.890       0.954       1.080
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC            0.022       0.100       0.139       0.347       0.555       0.594       0.672
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC           -0.064      -0.045      -0.036       0.013       0.062       0.071       0.090
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC           -0.142      -0.074      -0.038       0.145       0.328       0.363       0.432
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC           -0.100      -0.064      -0.046       0.050       0.145       0.163       0.199
+
+  Direct
+    WARMTH
+    MINDC           -0.725      -0.501      -0.386       0.213       0.812       0.927       1.152
+
+
+Group WOMEN
+
+Effects from MINDC to WARMTH
+
+  Total             -0.679      -0.521      -0.440      -0.017       0.406       0.487       0.645
+  Total indirect    -0.141      -0.081      -0.050       0.109       0.269       0.300       0.360
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC           -0.126      -0.085      -0.064       0.044       0.153       0.174       0.214
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC           -0.049      -0.039      -0.035      -0.010       0.015       0.020       0.029
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC           -0.038      -0.006       0.011       0.097       0.183       0.200       0.232
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC           -0.083      -0.068      -0.061      -0.022       0.017       0.024       0.039
+
+  Direct
+    WARMTH
+    MINDC           -0.780      -0.624      -0.544      -0.126       0.291       0.371       0.527
+
+
+
+CONFIDENCE INTERVALS OF STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+STDYX Standardization
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+Group MEN
+
+Effects from MINDC to WARMTH
+
+  Total             -0.046      -0.002       0.021       0.138       0.255       0.277       0.321
+  Total indirect     0.009       0.030       0.042       0.099       0.157       0.168       0.190
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC            0.005       0.019       0.026       0.062       0.098       0.105       0.119
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC           -0.011      -0.008      -0.006       0.002       0.011       0.013       0.016
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC           -0.025      -0.013      -0.006       0.026       0.058       0.064       0.077
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC           -0.018      -0.011      -0.008       0.009       0.026       0.029       0.036
+
+  Direct
+    WARMTH
+    MINDC           -0.130      -0.090      -0.069       0.038       0.146       0.166       0.207
+
+
+Group WOMEN
+
+Effects from MINDC to WARMTH
+
+  Total             -0.138      -0.106      -0.089      -0.003       0.083       0.099       0.131
+  Total indirect    -0.028      -0.016      -0.010       0.022       0.055       0.061       0.073
+
+  Specific indirect 1
+    WARMTH
+    INTERN
+    MINDC           -0.026      -0.017      -0.013       0.009       0.031       0.035       0.044
+
+  Specific indirect 2
+    WARMTH
+    EXTERN
+    MINDC           -0.010      -0.008      -0.007      -0.002       0.003       0.004       0.006
+
+  Specific indirect 3
+    WARMTH
+    HOSTILE
+    MINDC           -0.008      -0.001       0.002       0.020       0.037       0.040       0.047
+
+  Specific indirect 4
+    WARMTH
+    BENEV
+    MINDC           -0.017      -0.014      -0.012      -0.004       0.003       0.005       0.008
+
+  Direct
+    WARMTH
+    MINDC           -0.158      -0.127      -0.110      -0.026       0.059       0.075       0.107
+
+
+
+
+     Beginning Time:  09:23:29
+        Ending Time:  09:23:29
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2022 Muthen & Muthen

@@ -1,0 +1,54 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MPLUS ONLY READS 90 CHARACTERS ACROSS !!!!!!!!!!!!!!!!!!
+
+TITLE:  Mplus Example 6a Multiple-Group Path Model with Indirect Effects
+DATA:   FILE = Mindful.csv;       ! Can just list file name if data are in same folder
+        FORMAT = free;            ! FREE (default) or FIXED format
+        TYPE = individual;        ! Individual (default) or matrix data as input
+VARIABLE:
+! Names of all variables in data set 
+  NAMES = ID SexMW MindC Intern Extern Hostile Benev Warmth;
+! Names of all variables in model
+  USEVARIABLES = SexMW MindC Intern Extern Hostile Benev Warmth;
+! Missing data indicator 
+  MISSING = ALL(-999);
+! Grouping variable for multiple group analysis
+  GROUPING = SexMW (0=Men, 1=Women);
+
+ANALYSIS:   TYPE = GENERAL;          ! For path models
+            ESTIMATOR = MLR;         ! Robust ML (cannot use with bootstrapping)
+            !BOOTSTRAP IS 1000;      ! Bootstrapping for indirect effects
+OUTPUT:     STDYX;                   ! Standardized solution
+            MODINDICES (3.84);       ! Cheat codes to improve model fit (not with CONSTRAINT)
+            CINTERVAL;               ! Confidence interval for indirect effects
+            !CINTERVAL(BCBOOTSTRAP); ! Bootstrap CI for indirect effects (not with MLR)
+
+! Model code: ON = Y ON X, WITH = covariance (labels to do math on or create constraints)
+MODEL:
+! Bring X into the likelihood by estimating its mean and variance in empty model
+  [MindC] (mXint); MindC (mXvar);
+! Intercepts and residual variances for other variables
+  [Intern Extern Hostile Benev Warmth] (mM1int mM2int mM3int mM4int mYint);
+   Intern Extern Hostile Benev Warmth  (mM1var mM2var mM3var mM4var mYvar);
+! Direct MindC --> Warmth
+  Warmth ON MindC (mXtoY);
+! Left side of model
+  Intern Extern Hostile Benev ON MindC (XtoM1 mXtoM2 mXtoM3 mXtoM4);
+! Right side of model
+  Warmth ON Intern Extern Hostile Benev (mM1toY mM2toY mM3toY mM4toY);
+! Residual covariances among mediator variables
+  Intern Extern Hostile Benev WITH Intern Extern Hostile Benev;
+
+MODEL Women:
+! Bring X into the likelihood by estimating its mean and variance in empty model
+  [MindC] (wXint); MindC (wXvar);
+! Intercepts and residual variances for other variables
+  [Intern Extern Hostile Benev Warmth] (wM1int wM2int wM3int wM4int wYint);
+   Intern Extern Hostile Benev Warmth  (wM1var wM2var wM3var wM4var wYvar);
+! Direct MindC --> Warmth
+  Warmth ON MindC (wXtoY);
+! Left side of model
+  Intern Extern Hostile Benev ON MindC (XtoM1 wXtoM2 wXtoM3 wXtoM4);
+! Right side of model
+  Warmth ON Intern Extern Hostile Benev (wM1toY wM2toY wM3toY wM4toY);
+! Residual covariances among mediator variables
+  Intern Extern Hostile Benev WITH Intern Extern Hostile Benev;
