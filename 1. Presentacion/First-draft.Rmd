@@ -43,7 +43,13 @@ biblio <- bibtex::read.bib("Ref1.bib")
 
 ## Diseño
 
+Este es un estudio cuantitativo de diseño transversal, centrado en los resultados del proceso de admisión a la educación superior selectiva del año 2022. Además del análisis descriptivo de los factores académicos de admisión (NEM, Ranking, y pruebas de admisión en matemáticas y lenguaje), se estimó un modelo de senderos, o path analysis, para analizar el efecto que variables socioeconómicas de interés (estudiante primera generación y quintil de ingresos percápita por familia) sobre distintos resultados de admisión.
+
 ## Datos
+
+Los datos corresponden al proceso de admisión del año 2022, los cuales fueron solicitados al DEMRE. A diferencia de procesos anteriores, el DEMRE ahora facilita un único repositorio con la información de las distintas etapas del proceso.
+
+Entre las variables extraídas de la fuente original se encuentran los puntajes en las pruebas de admisión en lenguaje y matemáticas, puntajes derivados de las notas de enseñanza media (NEM y Ranking), educación del padre y la madre, decil de ingresos percápita por familia, y situación de las postulaciones del estudiante.
 
 ```{r, include=FALSE}
 library(dplyr)
@@ -133,6 +139,7 @@ dat3_5 <- data.frame(dat3[,c(1:8,19:30)])
 head(dat3_5,10)
 head(dat4,10)
 ```
+Como pueden darse cuenta, solo dos variables se consideraron como predictores de interés. En el caso de las variables de caracterización de los colegios, no se agregaron por conveniencia, ya que al incluirlos necesitaríamos ajustar el modelo a la estructura anidada de los datos para identificar adecuamente el rol de cada predictor en distintos niveles (al interior y entre colegios) y no tener errores estándar sesgados en los efectos de nivel 1. Además, como la pregunta de investigación involucra aspectos sociodemográficos, no se agregaron variables demográficas.
 
 ## Muestra
 
@@ -146,17 +153,15 @@ Con esto, pretendemos fijar un perfil de estudiante: aquel estudiante recién eg
 
 ## Procedimiento
 
+En primer lugar, se realizaron análisis descriptivos de los puntajes en los factores académicos de admisión según las variables de caracterización socioeconómicas escogidas.
 
+Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con las mediaciones de los factores académicos (estimando los tradicionales efectos `a`, `b` y `c'`), y otro sin estos efectos (las regresiones entre los mediadores y el resultado se fija en `@0`). Esto permitiría luego comparar los efectos c (incondicionales) con los c' (condicionales), sin embargo, las formulas disponibles para hacer esto [ver ecuación 11.6 en @mackinnon2012introduction] consideran solo un mediador, mientras que en nuestro análisis tenemos 4. Por esto, los efectos indirectos se presentan con la clásica opción de a*b (efectos no estandarizados).
 
 ![imagen](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
 
 # Resultados
 
-**Figure 2**
-
-*Intended analysis*
-![image2](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Intended%20analysis.png?raw=true)
-
+![figure2](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
 
 # Working Directory
 The working directory is the $directory$ or $path$ or $folder$ in which you are working. Every R instance has its own work directory as default. So, when you are trying to read data in R, you need to be sure that the object with the data that you are calling is in the location that you are working on or you are calling it from is the proper location. The function `getwd()` will display the name of the current working directory and the function `setwd()` will allow you to change the current directory to the desired one, of course to change the directory, you will need to enter the proper path to the desired directory. The path will change depending on the operating system that you may be using (e.g., linux, mac, windows) and the location of the directory. Let's see an example
