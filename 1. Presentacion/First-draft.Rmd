@@ -158,6 +158,8 @@ En primer lugar, se realizaron análisis descriptivos de los puntajes en los fac
 
 Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con las mediaciones de los factores académicos (estimando los tradicionales efectos `a`, `b` y `c'`), y otro sin estos efectos (las regresiones entre los mediadores y el resultado se fija en `@0`). Esto permitiría luego comparar los efectos c (incondicionales) con los c' (condicionales), sin embargo, las formulas disponibles para hacer esto [ver ecuación 11.6 en @mackinnon2012introduction] consideran solo un mediador, mientras que en nuestro análisis tenemos 4. Por esto, los efectos indirectos se presentan con la clásica opción de a*b (efectos no estandarizados).
 
+**Logica del modelo**
+
 ![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
 
 El análisis de senderos es un modelo de regresión lineal múltiple con esteroides. Es un conjunto de regresiones simultáneas que además permite revisar si, en adición al efecto principal, existen efectos indirectos entre el predictor y el resultado que no puede ser capturado por los modelos de regresión convencionales.
@@ -194,8 +196,8 @@ summary(dat5)
 ```{r}
 nem_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = NEM, fill = FAMILY_INCOME))+
   geom_boxplot()+
-  labs(y = "Puntajes NEM", x = 'Quintil de ingresos percapita familiar')+
-  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  labs(y = "Puntajes NEM", x = '')+
+  scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
   theme(axis.title.x=element_blank())+
@@ -203,8 +205,8 @@ nem_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = NEM, fil
 
 rkg_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = RKG, fill = FAMILY_INCOME))+
   geom_boxplot()+
-  labs(y = "Puntajes Ranking", x = 'Quintil de ingresos percapita familiar')+
-  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  labs(y = "Puntajes Ranking", x = '')+
+  scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete("Quintiles", labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
   theme(axis.title.x=element_blank())+
@@ -212,8 +214,8 @@ rkg_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = RKG, fil
 
 lang_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = LANG, fill = FAMILY_INCOME))+
   geom_boxplot()+
-  labs(y = "Puntajes Lenguaje", x = 'Quintil de ingresos percapita familiar')+
-  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  labs(y = "Puntajes Lenguaje", x = '')+
+  scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
   theme(axis.title.x=element_blank())+
@@ -221,8 +223,8 @@ lang_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = LANG, f
 
 math_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = MATH, fill = FAMILY_INCOME))+
   geom_boxplot()+
-  labs(y = "Puntajes Matemáticas", x = 'Quintil de ingresos percapita familiar')+
-  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  labs(y = "Puntajes Matematicas", x = '')+
+  scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
   theme(axis.title.x=element_blank())+
@@ -232,6 +234,169 @@ plot1 <- (nem_inc + rkg_inc)/(lang_inc+math_inc)
 plot1
 ```
 
+```{r}
+nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = NEM, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes NEM", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+rkg_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = RKG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Ranking", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete("Educacion alcanzada", labels = c("Basica", "Secundaria", "Superior"))+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+lang_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = LANG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Lenguaje", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+math_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = MATH, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Matematicas", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+plot2 <- (nem_edfather + rkg_edfather)/(lang_edfather+math_edfather)
+plot2
+```
+
+```{r}
+nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = NEM, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes NEM", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+rkg_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = RKG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Ranking", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete("Educacion alcanzada", labels = c("Basica", "Secundaria", "Superior"))+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+lang_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = LANG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Lenguaje", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+math_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = MATH, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Matematicas", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+plot2 <- (nem_edfather + rkg_edfather)/(lang_edfather+math_edfather)
+plot2
+```
+
+```{r}
+nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = NEM, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes NEM", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+rkg_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = RKG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Ranking", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete("Educacion alcanzada", labels = c("Basica", "Secundaria", "Superior"))+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+lang_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = LANG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Lenguaje", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+math_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = MATH, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Matematicas", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+plot2 <- (nem_edfather + rkg_edfather)/(lang_edfather+math_edfather)
+plot2
+```
+
+```{r}
+nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = NEM, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes NEM", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+rkg_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = RKG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Ranking", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete("Educacion alcanzada", labels = c("Basica", "Secundaria", "Superior"))+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+lang_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = LANG, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Lenguaje", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+math_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = MATH, fill = EDUCATION_FATHER))+
+  geom_boxplot()+
+  labs(y = "Puntajes Matematicas", x = '')+
+  scale_x_discrete(labels = c("", "", ""))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+plot2 <- (nem_edfather + rkg_edfather)/(lang_edfather+math_edfather)
+plot2
+```
 
 
 ![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
