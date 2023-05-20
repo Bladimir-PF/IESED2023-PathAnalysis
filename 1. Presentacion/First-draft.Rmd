@@ -157,11 +157,15 @@ En primer lugar, se realizaron análisis descriptivos de los puntajes en los fac
 
 Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con las mediaciones de los factores académicos (estimando los tradicionales efectos `a`, `b` y `c'`), y otro sin estos efectos (las regresiones entre los mediadores y el resultado se fija en `@0`). Esto permitiría luego comparar los efectos c (incondicionales) con los c' (condicionales), sin embargo, las formulas disponibles para hacer esto [ver ecuación 11.6 en @mackinnon2012introduction] consideran solo un mediador, mientras que en nuestro análisis tenemos 4. Por esto, los efectos indirectos se presentan con la clásica opción de a*b (efectos no estandarizados).
 
-![imagen](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
+![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
+
+El análisis de senderos es un modelo de regresión lineal múltiple con esteroides. Es un conjunto de regresiones simultáneas que además permite revisar si, en adición al efecto principal, existen efectos indirectos entre el predictor y el resultado que no puede ser capturado por los modelos de regresión convencionales.
+
+
 
 # Resultados
 
-![figure2](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
+![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
 
 # Working Directory
 The working directory is the $directory$ or $path$ or $folder$ in which you are working. Every R instance has its own work directory as default. So, when you are trying to read data in R, you need to be sure that the object with the data that you are calling is in the location that you are working on or you are calling it from is the proper location. The function `getwd()` will display the name of the current working directory and the function `setwd()` will allow you to change the current directory to the desired one, of course to change the directory, you will need to enter the proper path to the desired directory. The path will change depending on the operating system that you may be using (e.g., linux, mac, windows) and the location of the directory. Let's see an example
