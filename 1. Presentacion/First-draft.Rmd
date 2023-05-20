@@ -11,6 +11,8 @@ output:
     highlight: textmate
     code_folding: 'hide'
 bibliography: Ref1.bib  
+editor_options: 
+  chunk_output_type: console
 ---
 
 <style type="text/css">
@@ -96,7 +98,6 @@ dat3 <- dat2 %>% mutate(
   Q3 = ifelse(Q_FAM_INC == 3,1,0),
   Q4 = ifelse(Q_FAM_INC == 4,1,0),
   Q5 = ifelse(Q_FAM_INC == 5,1,0),
-  
   P037_1 = ifelse(P037 == 13 | P037 == 99, -1, P037), # father
   P038_1 = ifelse(P038 == 13 | P038 == 99, -1, P038), # mother
   FIRST_G = ifelse(P037_1 > 9 | P038_1 > 9, 0, 1),
@@ -161,11 +162,85 @@ Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con 
 
 El análisis de senderos es un modelo de regresión lineal múltiple con esteroides. Es un conjunto de regresiones simultáneas que además permite revisar si, en adición al efecto principal, existen efectos indirectos entre el predictor y el resultado que no puede ser capturado por los modelos de regresión convencionales.
 
+![Tomado de MacKinnon (2008,p.303)](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%203.png?raw=true)
 
+En nuestro caso, los predictores exógenos son las características socioeconómicas FIRST_G y FAMILY_INCOME, con los factores académicos actuando como mediadores. Los modelos se estimaron bajo Máxima Verosimilitud con errores estándar robustos (`MLR`), utilizando una distribución condicional `multinomial` para los residuos y función de enlace logit de referencia (`baseline logit`).
 
 # Resultados
 
+```{r, include=FALSE}
+library(ggplot2)
+library(patchwork)
+
+dat5 <- dat3[,c('P083','P084','P085','P086','Q_FAM_INC','P037_1','P038_1','FIRST_G','ADM2')]
+colnames(dat5) <- c('NEM','RKG','LANG','MATH','FAMILY_INCOME','EDUCATION_FATHER','EDUCATION_MOTHER','FIRST_G','ADM')
+str(dat5)
+dat5 <- dat5 %>% mutate(
+  FAMILY_INCOME = factor(FAMILY_INCOME),
+  FIRST_G = factor(FIRST_G),
+  ADM = factor(ADM),
+  EDUCATION_FATHER = ifelse(EDUCATION_FATHER >= 1 & EDUCATION_FATHER <=5, 0,
+                    ifelse(EDUCATION_FATHER >= 6 & EDUCATION_FATHER <= 9, 1,
+                           ifelse(EDUCATION_FATHER == -1, NA, 2))),
+  EDUCATION_MOTHER = ifelse(EDUCATION_MOTHER >= 1 & EDUCATION_MOTHER <=5, 0,
+                    ifelse(EDUCATION_MOTHER >= 6 & EDUCATION_MOTHER <= 9, 1,
+                           ifelse(EDUCATION_MOTHER == -1, NA, 2))),
+  
+  EDUCATION_FATHER = factor(EDUCATION_FATHER),
+  EDUCATION_MOTHER = factor(EDUCATION_MOTHER))
+summary(dat5)
+```
+
+```{r}
+nem_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = NEM, fill = FAMILY_INCOME))+
+  geom_boxplot()+
+  labs(y = "Puntajes NEM", x = 'Quintil de ingresos percapita familiar')+
+  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+rkg_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = RKG, fill = FAMILY_INCOME))+
+  geom_boxplot()+
+  labs(y = "Puntajes Ranking", x = 'Quintil de ingresos percapita familiar')+
+  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  scale_fill_discrete("Quintiles", labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+lang_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = LANG, fill = FAMILY_INCOME))+
+  geom_boxplot()+
+  labs(y = "Puntajes Lenguaje", x = 'Quintil de ingresos percapita familiar')+
+  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+math_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = MATH, fill = FAMILY_INCOME))+
+  geom_boxplot()+
+  labs(y = "Puntajes Matemáticas", x = 'Quintil de ingresos percapita familiar')+
+  scale_x_discrete(labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
+  scale_fill_discrete(guide = 'none')+
+  scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
+  theme(axis.title.x=element_blank())+
+  theme_bw()
+
+plot1 <- (nem_inc + rkg_inc)/(lang_inc+math_inc)
+plot1
+```
+
+
+
 ![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
+
+
+
+
+
+
 
 # Working Directory
 The working directory is the $directory$ or $path$ or $folder$ in which you are working. Every R instance has its own work directory as default. So, when you are trying to read data in R, you need to be sure that the object with the data that you are calling is in the location that you are working on or you are calling it from is the proper location. The function `getwd()` will display the name of the current working directory and the function `setwd()` will allow you to change the current directory to the desired one, of course to change the directory, you will need to enter the proper path to the desired directory. The path will change depending on the operating system that you may be using (e.g., linux, mac, windows) and the location of the directory. Let's see an example
