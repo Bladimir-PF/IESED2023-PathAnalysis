@@ -162,9 +162,14 @@ Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con 
 
 ![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
 
-El análisis de senderos es un modelo de regresión lineal múltiple con esteroides. Es un conjunto de regresiones simultáneas que además permite revisar si, en adición al efecto principal, existen efectos indirectos entre el predictor y el resultado que no puede ser capturado por los modelos de regresión convencionales.
+El análisis de senderos es un modelo de regresión lineal múltiple (o logística multinomial) con esteroides. Es un conjunto de regresiones simultáneas que permite revisar si, en adición al efecto principal entre los predictores exógenos y la variable dependiente, existen efectos indirectos entre el predictor y el resultado que no pueden ser capturado por los modelos de regresión convencionales.
 
 ![Tomado de MacKinnon (2008,p.303)](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%203.png?raw=true)
+
+
+
+https://www.datasklr.com/logistic-regression/multinomial-logistic-regression
+
 
 En nuestro caso, los predictores exógenos son las características socioeconómicas FIRST_G y FAMILY_INCOME, con los factores académicos actuando como mediadores. Los modelos se estimaron bajo Máxima Verosimilitud con errores estándar robustos (`MLR`), utilizando una distribución condicional `multinomial` para los residuos y función de enlace logit de referencia (`baseline logit`).
 
