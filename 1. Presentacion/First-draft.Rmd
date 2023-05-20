@@ -164,6 +164,8 @@ Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con 
 
 El análisis de senderos es un modelo de regresión lineal múltiple (o logística multinomial) con esteroides. Es un conjunto de regresiones simultáneas que permite revisar si, en adición al efecto principal entre los predictores exógenos y la variable dependiente, existen efectos indirectos entre el predictor y el resultado que no pueden ser capturado por los modelos de regresión convencionales.
 
+En nuestro caso, los predictores exógenos son las características socioeconómicas FIRST_G y FAMILY_INCOME, con los factores académicos actuando como mediadores. Los modelos se estimaron bajo Máxima Verosimilitud con errores estándar robustos (`MLR`), utilizando una distribución condicional `multinomial` para los residuos y función de enlace logit de referencia (`baseline logit`).
+
 En síntesis, estamos tratando de estimar algo así:
 
 ![Tomado de MacKinnon (2008,p.303)](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%203.png?raw=true)
@@ -172,7 +174,11 @@ Con un modelo que calcula esto:
 
 ![Tomado de https://www.datasklr.com/logistic-regression/multinomial-logistic-regression](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Multinomial%20logistic%20regression.png?raw=true)
 
-En nuestro caso, los predictores exógenos son las características socioeconómicas FIRST_G y FAMILY_INCOME, con los factores académicos actuando como mediadores. Los modelos se estimaron bajo Máxima Verosimilitud con errores estándar robustos (`MLR`), utilizando una distribución condicional `multinomial` para los residuos y función de enlace logit de referencia (`baseline logit`).
+Y que luce así:
+
+![Hecho en SEMBuilder, STATA](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
+
+
 
 # Resultados
 
@@ -408,7 +414,6 @@ plot5
 ```
 
 
-![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
 
 
 
