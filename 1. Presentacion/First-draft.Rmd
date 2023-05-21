@@ -411,9 +411,13 @@ plot5
 En general, a medida que las condiciones socioeconómicas mejoran, también lo hacen los puntajes promedio en los factores de admisión. Incluso el Ranking de notas muestra este comportamiento disímil entre grupos de estudiantes.
 
 
+![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20app%20status.png?raw=true)
 
+![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20predicted%20achievement%20in%20the%20academic%20factors.png?raw=true)
 
+![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/results%20-%20indirect%20effects.png?raw=true)
 
+![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20rsquare's.png?raw=true)
 
 
 # Working Directory
