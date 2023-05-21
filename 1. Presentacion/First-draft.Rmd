@@ -178,9 +178,9 @@ Y que luce así:
 
 ![Hecho en SEMBuilder, STATA](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
 
-
-
 # Resultados
+
+Como diversas investigaciones han reportado, el nivel de rendimiento en los factores académicos de selección varía entre grupos según variables socioeconómicas.
 
 ```{r, include=FALSE}
 library(ggplot2)
@@ -205,6 +205,9 @@ dat5 <- dat5 %>% mutate(
 summary(dat5)
 ```
 
+*Figura 3*
+**Rendimiento en los factores de admisión según quintil de ingresos percápita de la familia**
+
 ```{r}
 nem_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = NEM, fill = FAMILY_INCOME))+
   geom_boxplot()+
@@ -212,7 +215,6 @@ nem_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = NEM, fil
   scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 rkg_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = RKG, fill = FAMILY_INCOME))+
@@ -221,7 +223,6 @@ rkg_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = RKG, fil
   scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete("Quintiles", labels = c("Q1", "Q2", "Q3", "Q4", "Q5"))+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 lang_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = LANG, fill = FAMILY_INCOME))+
@@ -230,7 +231,6 @@ lang_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = LANG, f
   scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 math_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = MATH, fill = FAMILY_INCOME))+
@@ -239,12 +239,14 @@ math_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = MATH, f
   scale_x_discrete(labels = c("", "", "", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 plot1 <- (nem_inc + rkg_inc)/(lang_inc+math_inc)
 plot1
 ```
+
+*Figura 4*
+**Rendimiento en los factores de admisión según educación del padre**
 
 ```{r}
 nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = NEM, fill = EDUCATION_FATHER))+
@@ -253,7 +255,6 @@ nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = 
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 rkg_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = RKG, fill = EDUCATION_FATHER))+
@@ -262,7 +263,6 @@ rkg_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = 
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete("Educacion alcanzada", labels = c("Basica", "Secundaria", "Superior"))+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 lang_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = LANG, fill = EDUCATION_FATHER))+
@@ -271,7 +271,6 @@ lang_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y =
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 math_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = MATH, fill = EDUCATION_FATHER))+
@@ -280,12 +279,14 @@ math_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y =
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 plot2 <- (nem_edfather + rkg_edfather)/(lang_edfather+math_edfather)
 plot2
 ```
+
+*Figura 5*
+**Rendimiento en los factores de admisión según educación de la madre**
 
 ```{r}
 nem_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = NEM, fill = EDUCATION_MOTHER))+
@@ -294,7 +295,6 @@ nem_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = 
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 rkg_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = RKG, fill = EDUCATION_MOTHER))+
@@ -303,7 +303,6 @@ rkg_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = 
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete("Educacion alcanzada", labels = c("Basica", "Secundaria", "Superior"))+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 lang_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = LANG, fill = EDUCATION_MOTHER))+
@@ -312,7 +311,6 @@ lang_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y =
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 math_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = MATH, fill = EDUCATION_MOTHER))+
@@ -321,12 +319,14 @@ math_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y =
   scale_x_discrete(labels = c("", "", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 plot3 <- (nem_edmother + rkg_edmother)/(lang_edmother+math_edmother)
 plot3
 ```
+
+*Figura 6*
+**Rendimiento en los factores de admisión según situación de primera generación**
 
 ```{r}
 nem_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = NEM, fill = FIRST_G))+
@@ -335,7 +335,6 @@ nem_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = NEM, fill = FIR
   scale_x_discrete(labels = c("", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 rkg_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = RKG, fill = FIRST_G))+
@@ -344,7 +343,6 @@ rkg_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = RKG, fill = FIR
   scale_x_discrete(labels = c("", ""))+
   scale_fill_discrete("Estudiante primera generacion", labels = c("No", "Si", "Superior"))+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 lang_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = LANG, fill = FIRST_G))+
@@ -353,7 +351,6 @@ lang_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = LANG, fill = F
   scale_x_discrete(labels = c("", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 math_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = MATH, fill = FIRST_G))+
@@ -362,12 +359,14 @@ math_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = MATH, fill = F
   scale_x_discrete(labels = c("", ""))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 plot4 <- (nem_fg + rkg_fg)/(lang_fg+math_fg)
 plot4
 ```
+
+*Figura 7*
+**Rendimiento en los factores de admisión según situación de la postulación**
 
 ```{r}
 nem_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = NEM, fill = ADM))+
@@ -376,7 +375,6 @@ nem_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = NEM, fill = ADM))+
   scale_x_discrete(labels = c("", "", "",''))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 rkg_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = RKG, fill = ADM))+
@@ -384,11 +382,10 @@ rkg_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = RKG, fill = ADM))+
   labs(y = "Puntajes Ranking", x = '')+
   scale_x_discrete(labels = c("", "", "",''))+
   scale_fill_discrete("Situacion de la postulacion", labels = c("No postula",
-                                                                "Postula pero ninguna postulacion cumple requisitos",
-                                                                "Postula y no es seleccionado/a",
-                                                                'Postula y es seleccionado/a'))+
+                                                                "Postula, ninguna postulacion cumple requisitos",
+                                                                "Postula, no es seleccionado/a",
+                                                                'Postula, seleccionado/a'))+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 lang_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = LANG, fill = ADM))+
@@ -397,7 +394,6 @@ lang_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = LANG, fill = ADM)
   scale_x_discrete(labels = c("", "", "",''))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 math_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = MATH, fill = ADM))+
@@ -406,14 +402,13 @@ math_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = MATH, fill = ADM)
   scale_x_discrete(labels = c("", "", "",''))+
   scale_fill_discrete(guide = 'none')+
   scale_y_continuous(limits = c(150, 850), breaks = seq(400, 800, 200)) +
-  theme(axis.title.x=element_blank())+
   theme_bw()
 
 plot5 <- (nem_adm + rkg_adm)/(lang_adm + math_adm)
 plot5
 ```
 
-
+En general, a medida que las condiciones socioeconómicas mejoran, también lo hacen los puntajes promedio en los factores de admisión. Incluso el Ranking de notas muestra este comportamiento disímil entre grupos de estudiantes.
 
 
 
