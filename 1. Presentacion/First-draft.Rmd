@@ -39,7 +39,11 @@ biblio <- bibtex::read.bib("Ref1.bib")
 ## Funcionamiento del proceso de admisión a la educación superior selectiva
 ## Admisión: ¿mérito o reproducción de desigualdades?
 ## Evidencias de investigación
-## Pregunta de investigación
+## Pregunta y objetivo de investigación
+
+- ¿*Cuál es el efecto directo e indirecto que los predictores socioeconómicos de interés tienen sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022*? 
+
+Por tanto, el objetivo de esta investigación es **estimar/analizar los efectos directos e indirectos de los predictores socioeconómicos de interés sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022 a través de un modelo estadístico multivariante**.
 
 # Metodología
 
@@ -205,9 +209,9 @@ dat5 <- dat5 %>% mutate(
 summary(dat5)
 ```
 
-*Figura 3*
+**Figura 3**
 
-**Rendimiento en los factores de admisión según quintil de ingresos percápita de la familia**
+*Rendimiento en los factores de admisión según quintil de ingresos percápita de la familia*
 
 ```{r}
 nem_inc <- ggplot(dat5[complete.cases(dat5),], aes(x=FAMILY_INCOME, y = NEM, fill = FAMILY_INCOME))+
@@ -246,9 +250,9 @@ plot1 <- (nem_inc + rkg_inc)/(lang_inc+math_inc)
 plot1
 ```
 
-*Figura 4*
+**Figura 4**
 
-**Rendimiento en los factores de admisión según educación del padre**
+*Rendimiento en los factores de admisión según educación del padre*
 
 ```{r}
 nem_edfather <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_FATHER, y = NEM, fill = EDUCATION_FATHER))+
@@ -287,9 +291,9 @@ plot2 <- (nem_edfather + rkg_edfather)/(lang_edfather+math_edfather)
 plot2
 ```
 
-*Figura 5*
+**Figura 5**
 
-**Rendimiento en los factores de admisión según educación de la madre**
+*Rendimiento en los factores de admisión según educación de la madre*
 
 ```{r}
 nem_edmother <- ggplot(dat5[complete.cases(dat5),], aes(x=EDUCATION_MOTHER, y = NEM, fill = EDUCATION_MOTHER))+
@@ -328,9 +332,9 @@ plot3 <- (nem_edmother + rkg_edmother)/(lang_edmother+math_edmother)
 plot3
 ```
 
-*Figura 6*
+**Figura 6**
 
-**Rendimiento en los factores de admisión según situación de primera generación**
+*Rendimiento en los factores de admisión según situación de primera generación*
 
 ```{r}
 nem_fg <- ggplot(dat5[complete.cases(dat5),], aes(x=FIRST_G, y = NEM, fill = FIRST_G))+
@@ -369,9 +373,9 @@ plot4 <- (nem_fg + rkg_fg)/(lang_fg+math_fg)
 plot4
 ```
 
-*Figura 7*
+**Figura 7**
 
-**Rendimiento en los factores de admisión según situación de la postulación**
+*Rendimiento en los factores de admisión según situación de la postulación*
 
 ```{r}
 nem_adm <- ggplot(dat5[complete.cases(dat5),], aes(x=ADM, y = NEM, fill = ADM))+
@@ -431,90 +435,33 @@ Ahora, en términos de rendimiento en los factores académicos, se observan simi
 
 Algo común en los análisis de senderos es la prueba de los efectos indirectos, donde un modelo con variables observadas continuas arroja similares resultados entre las opciones de `c - c'` y `a * b`, sin embargo, debido a que las regresiones `a` son lineales y las `b` logísticas, ambas alternativas no son comparables. Esto ha llevado a una serie de debates metodológicos que no puedo cubrir aquí pero que pueden leer en los trabajos de la carpeta [2. Lecturas recomendadas](https://github.com/Bladimir-PF/PresentacionIESED2023/tree/main/2.%20Lecturas%20recomendadas). Una opción es calcular `c corregido` para luego ser comparados con `c'`, aunque para esto se requiere `b^2`, pero en nuestro caso tenemos 4 effectos b, por lo que esto debe revisarse.
 
+![Tomado de MacKinnon (2008,p.307)](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/c%20corrected.png?raw=true)
+
+Tendiendo esto en consideración, la Tabla 3 muestra los efectos indirectos del modelo (a * b sin estandarizar), la mayoría de los cuales resulta significativo. A diferencia de los resultados anteriores, la interpretación de estos coeficientes no es sencilla, pues tanto los números como su dirección no se pueden interpretar directamente debido a cómo fueron calculadas. Lo que sí podemos decir con estos efectos es que el rol o impacto de las variables socioeconómicas de interés no tan solo es directo y aun controlando por los factores académicos del proceso de admisión, sino que también son importantes en el rendimiento de cada uno de los factores académicos y su posterior efecto sobre la situación de la aplicación.
+
 ![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/results%20-%20indirect%20effects.png?raw=true)
+
+Por último, el modelo también provee los r cuadrados de los predictores académicos, los cuales pese a parecer pequeños, no debemos olvidar que solo consideran dos variables socioeconómicas. Especialmente para el caso de los exámenes de admisión, los predictores exógenos alcanzan a explicar aproximadamente un 10% de su varianza.
 
 ![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20rsquare's.png?raw=true)
 
+# Conclusiones (preliminares)
 
-# Working Directory
-The working directory is the $directory$ or $path$ or $folder$ in which you are working. Every R instance has its own work directory as default. So, when you are trying to read data in R, you need to be sure that the object with the data that you are calling is in the location that you are working on or you are calling it from is the proper location. The function `getwd()` will display the name of the current working directory and the function `setwd()` will allow you to change the current directory to the desired one, of course to change the directory, you will need to enter the proper path to the desired directory. The path will change depending on the operating system that you may be using (e.g., linux, mac, windows) and the location of the directory. Let's see an example
+- Hay un gran contingente de estudiantes que decide no postular a los programas selectivos, entre los cuales sería importante conocer las razones y si el próximo año participan y cuáles son sus preferencias. Hasta ahora, según los resultados, las probabilidad de no postular incrementan entre los estudiantes de familias de mayores quintiles de ingresos percápita en lugar de postular y no ser seleccionado/a.
 
-```{r, eval=FALSE}
+- Los factores académicos, en especial los exámenes de admisión, tienen un rol positivo sobre la probabilidad de postular y de admisión.
 
-# everything that comes after a # symbol is a comment and not process
-# to check the current directory
-getwd()
-# to set a new working directory to the folder label 'Documents'
-# assume that the username is 'ariel'
-# linux
-setwd('/home/ariel/Documents/')
-# mac
-setwd('/Volumes/ariel/Documents/')
-# windows
-setwd('C:/ariel/Documents/')
-```
+- Los predictores socioeconómicos fueron significativamente estadísticos en la mayoría de análisis bivariados y multivariantes, incrementando los niveles de rendimiento promedio y las probabilidades de selección cuanto más favorable el nivel de ingresos percápita de la familia y los recursos educativos del padre y/o la madre.
 
-# Functions and Arguments
-Functions are programmed to execute different tasks. For example, `getwd()` is a function that allows to display the path to the current working directory. The more complex the function, the more arguments that the function may include. Arguments in functions can take the form of objects, names, or options. All functions in `R` provided by the base install or by packages have some source of documentation, explaining the inputs, process, and the outputs of those functions. 
+# Bonus: sitios para aprender a utilizar `R` 
 
-# Linear Models
-One of the most common functions to execute linear models in `R` is the `lm()` function. This function, includes several different arguments. The basic structure of the `lm()` function is 
+Gracias al profesor Ariel Aloe por resumir estos recursos: 
 
-<div align="center">`lm(outcome ~ X1 + X2, data = mydata)` </div>
-where `lm` stands for the function to perform a linear model, `outcome` will be replaced by the name of the outcome in the data set, the `~` symbol takes the place of the equal in the formula, so we will keep it always there when using the `lm()` function, `X1 + X2` represents the names of two possible predictors of covariates (the intercept is already in the formula as default so we do not need to explicitly add it), and `data = ` is the argument where we define our data set, so the `mydat` will be replaced with the name of the object that stores the data set.
-
-## Minimal Example
-
-Below we have the code for an example using the `cars` data set which is one of the many data sets available in base `R`.
-
-```{r }
-# we make the data avaiable first
-data("cars")
-```
-
-Let's see the first six observations for each variable in this data set by using the function `head()` as we can see in the code
-```{r }
-head(cars)
-```
-
-Now, we will fit a linear model, but we will store the output information of our model in our object name `fit1`, you can use any name and sometimes its useful to pick a more descriptive name. Then, when we replace the word `outcome` for the name of the variable that we used as outcome in our data set, which is the variable `speed`, and we have only one predictor or covariate in the data set, so our predictor is `dist`, also notice that our predictor is in the right side of the `~` symbol. Finally, we declare the name of our data set after the `data = `, in this case, we replace the `mydat` above for `cars`.
-```{r }
-fit1 <- lm(speed ~ dist, data = cars)
-```
-
-At this point all the information about our data and model are stored in the `fit1` object. To access to this information we use the `summary()` function as seen below. 
-
-```{r }
-summary(fit1)
-```
-
-# Working With the Server
-All the `R` code that you need for class, is located in our server. To complete your assignments, you will need to upload your data to the server using the upload button in `Rstudio` keep in mind that you will need to know the exact location and path to where you are saving your data to be able to make the data available in the working memory. 
-
-At the end of the semester, you should also download your whole folder to save your work, plus the code that I have provided. 
-
-# Recomended Workflow for This Class
-I suggest that:
-
-- you get use to using `Rstudio` using the university server. You will need to log in using the link provided in class and the two-factor authentication. Once you are in the server, you can open scripts to type your `R` code, scripts have the extension `.R`; of course you can also prefer to use `.Rmd` or `.Rnw` if you are intending to embed text, code, and output or some combination of those. 
-
-- you create your own folder within the server and copy the original files that I provide for class there. The idea is that in this way, you can make notes and modify those files as needed. Also, when you create your own scripts, you should save them in your folder so you can always go back to them and reproduce what you have done. 
-
-- you watch the videos, read the handouts, and other materials prior to each class. During most classes, we will work on activities and exercises based on the materials that you watched and read. It is your responsibility to come prepared to class. 
-
-- also when you do the readings and watch the videos, please write down your questions. Then, you can send me your questions in an email prior to class and/or you can also directly ask those questions in class. The more that students ask questions the more interesting our classes will get! 
-
-All the code that you will need will be provided to you, all you will need to know about the code, is how to change the variable names, the data file name, and of course, to be able to select the proper code to use for the proper analyses. 
-
-Remember that learning statistics and `R` is similar to learning another language, it is easier for some people than others. But there are no secrets to how to do it; the bottom line is that the more you practice, the more natural that it will become. And the longer that you do it the better that you will get to it. 
-
-# Useful Sites for learning `R` 
-
-There are many (almost an overwhelming amount) of resources to learn `R` on the web or to find help with specific errors. So below, I have shared some of my favorites for you, 
-
-- [Rstudio](https://github.com/Bladimir-PF/PresentacionIESED2023/tree/main/2.%20Lecturas%20recomendadas)
+- [Rstudio](https://education.rstudio.com/learn/beginner/)
 - [R for data science](https://r4ds.had.co.nz)
 - [Quick-R](https://www.statmethods.net)
 - [W3Schools](https://www.w3schools.com/r/)
 - [Guru99](https://www.guru99.com/r-tutorial.html)
 - [R UCLA](https://stats.oarc.ucla.edu/r/)
+
+# Referencias
