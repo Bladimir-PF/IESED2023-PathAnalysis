@@ -1792,7 +1792,7 @@ socioeconómicos de los estudiantes</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -1801,7 +1801,8 @@ workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hi
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -1813,8 +1814,8 @@ workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hi
 <strong>Last updated:</strong> 2023-05-22
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
-<span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>~/OneDrive - University of
@@ -1836,19 +1837,16 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -1932,13 +1930,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomBladimirPFPresentacionIESED2023tree6f2c4e824ee44c2e8751f8fe1b730aef71e11f79targetblank6f2c4e8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomBladimirPFPresentacionIESED2023tree6d2c1697cb1b2950e313acb2fe22713d585552aatargetblank6d2c169a">
 <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Bladimir-PF/PresentacionIESED2023/tree/6f2c4e824ee44c2e8751f8fe1b730aef71e11f79" target="_blank">6f2c4e8</a>
+<a href="https://github.com/Bladimir-PF/PresentacionIESED2023/tree/6d2c1697cb1b2950e313acb2fe22713d585552aa" target="_blank">6d2c169</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomBladimirPFPresentacionIESED2023tree6f2c4e824ee44c2e8751f8fe1b730aef71e11f79targetblank6f2c4e8a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomBladimirPFPresentacionIESED2023tree6d2c1697cb1b2950e313acb2fe22713d585552aatargetblank6d2c169a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development
@@ -1947,7 +1945,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Bladimir-PF/PresentacionIESED2023/tree/6f2c4e824ee44c2e8751f8fe1b730aef71e11f79" target="_blank">6f2c4e8</a>.
+<a href="https://github.com/Bladimir-PF/PresentacionIESED2023/tree/6d2c1697cb1b2950e313acb2fe22713d585552aa" target="_blank">6d2c169</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -1965,14 +1963,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Untracked files:
-    Untracked:  2. Lecturas recomendadas/Centro de Estudios MINEDUC. (2019). Que sabemos sobre admisión a la educacion superior.pdf
-
-Unstaged changes:
-    Modified:   1. Presentacion/First-draft.Rmd
-    Modified:   1. Presentacion/First-draft.html
-    Modified:   1. Presentacion/Ref1.bib
 
 </code></pre>
 <p>
@@ -2018,6 +2008,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Bladimir-PF/PresentacionIESED2023/blob/6d2c1697cb1b2950e313acb2fe22713d585552aa/1. Presentacion/First-draft.Rmd" target="_blank">6d2c169</a>
+</td>
+<td>
+Bladimir
+</td>
+<td>
+2023-05-22
+</td>
+<td>
+final version for the presentation
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Bladimir-PF/PresentacionIESED2023/6d2c1697cb1b2950e313acb2fe22713d585552aa/1. Presentacion/First-draft.html" target="_blank">6d2c169</a>
+</td>
+<td>
+Bladimir
+</td>
+<td>
+2023-05-22
+</td>
+<td>
+final version for the presentation
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2480,40 +2504,48 @@ asignar con relativa autonomía a estos factores. Para cada postulación,
 el estudiante tiene un puntaje compuesto de postulación (puntaje NEM *
 ponderación NEM del programa + otros puntajes*otros pesos) que lo
 posiciona en determinado lugar de la lista de postulantes a ese
-programa. Según las preferencias del estudiante y vacantes disponibles,
-será seleccionado/a y podrá matricularse en el programa de su
-elección.</p>
-<p>Dado que el interés de este estudio reside en los <em>estudiantes que
-participan del proceso de selección para una vacante en alguno de los
-programas que ofrecen las universidades selectivas</em>, y que el
-sistema</p>
-<div id="características-del-sae-2022" class="section level2">
-<h2>Características del SAE 2022</h2>
+programa. Según las preferencias del estudiante, puntaje compuesto y
+vacantes disponibles, será seleccionado/a y podrá matricularse en el
+programa escogido.</p>
+<div id="características-del-sua-2022" class="section level2">
+<h2>Características del SUA 2022</h2>
 <ul>
-<li>Pruebas estimaci´on de las habilidades por el m´etodo IRT utilizado
-(Rasch)</li>
+<li>Distintas fechas de rendición (6-7/12, 9-10/12 )</li>
+<li>Priorización curricular debido a la pandemia</li>
+<li>Cambios en las Pruebas de Transición (PDT)</li>
 </ul>
-</div>
-<div id="funcionamiento-del-proceso-de-admisión-a-la-educación-superior-selectiva" class="section level2">
-<h2>Funcionamiento del proceso de admisión a la educación superior
-selectiva</h2>
 </div>
 <div id="admisión-mérito-o-reproducción-de-desigualdades" class="section level2">
 <h2>Admisión: ¿mérito o reproducción de desigualdades?</h2>
-</div>
-<div id="evidencias-de-investigación" class="section level2">
-<h2>Evidencias de investigación</h2>
+<p>La segmentación socioeconómica es una realidad transversal en la
+educación chilena. Si bien diversas evidencias de investigación han
+reportado diferencias significativas entre estudiantes según sus
+características territoriales, demográficas y socioeconómicas desde el
+proceso de admisión hasta el egreso de la educación superior, es difícil
+aislar estos hallazgos de la forma en que está funcionando el sistema
+educativo como un todo.</p>
+<p>La segmentación socioeconómica y las distintas formas de segregación
+están afectan la trayectoria escolar y de formación profesional de
+varios estudiantes. Por esto, la neutralidad y objetividad del SUA está
+continuamente en debate. La pregunta sobre si el SUA efectivamente
+ofrece unas oportunidades comparables a todos/as los y las estudiantes
+de ingresar a la educación superior selectiva sigue abierta, y los
+estudios centrados en el impacto o rol de variables socioeconómicas
+sobre los resultados de admisión son un aporte, cuando menos, al rechazo
+de estos supuestos.</p>
 </div>
 <div id="pregunta-y-objetivo-de-investigación" class="section level2">
 <h2>Pregunta y objetivo de investigación</h2>
+<p>De acuerdo a lo mencionado, la pregunta de interés para nuestro
+estudio es:</p>
 <ul>
 <li>¿<em>Cuál es el efecto directo e indirecto que los predictores
 socioeconómicos de interés tienen sobre los distintos resultados de
 aplicación en el proceso de admisión a la educación superior selectiva
 el año 2022</em>?</li>
 </ul>
-<p>Por tanto, el objetivo de esta investigación es
-<strong>estimar/analizar los efectos directos e indirectos de los
+<p>Por tanto, el objetivo de esta investigación es:</p>
+<p><strong>estimar/analizar los efectos directos e indirectos de los
 predictores socioeconómicos de interés sobre los distintos resultados de
 aplicación en el proceso de admisión a la educación superior selectiva
 el año 2022 a través de un modelo estadístico

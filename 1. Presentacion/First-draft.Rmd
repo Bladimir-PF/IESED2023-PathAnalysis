@@ -65,11 +65,11 @@ La segmentación socioeconómica y las distintas formas de segregación están a
 
 De acuerdo a lo mencionado, la pregunta de interés para nuestro estudio es:
 
-- ¿*Cuál es el efecto directo e indirecto que los predictores socioeconómicos de interés tienen sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022*? 
+¿*Qué efecto tienen los predictores socioeconómicos de interés tienen sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022*? 
 
 Por tanto, el objetivo de esta investigación es:
 
-**estimar/analizar los efectos directos e indirectos de los predictores socioeconómicos de interés sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022 a través de un modelo estadístico multivariante**.
+*Estimar/analizar los efectos directos e indirectos de los predictores socioeconómicos de interés sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva del año 2022 a través de un modelo estadístico multivariante*.
 
 # Metodología
 
