@@ -35,15 +35,41 @@ biblio <- bibtex::read.bib("Ref1.bib")
 ```
 
 # Introducción
-## Características del sistema de educación superior
-## Funcionamiento del proceso de admisión a la educación superior selectiva
+
+En Chile, el sistema de educación superior está compuesto por diversas instituciones. Según datos del [Ministerio de Educación](https://educacionsuperior.mineduc.cl/donde-estudiar/), la oferta de estudios superiores del año 2022 estuvo formada por:  
+
+- Centros de Formación Técnica (50), que ofrecen formación Técnica de Nivel Superior.
+- Institutos Profesionales (32), que ofrecen carreras técnicas y formación profesional, aunque sin grado académico (licenciatura, bachiller o posgrados).
+- Universidades (58), que ofrecen carreras técnicas y profesionales con licenciatura, además de opciones de posgrado y postítulo. De las 58, 30 pertenecen al Consejo de Rectores de las Universidades de Chile (CRUCH) y 28 son privadas.
+
+De las 58 universidades registradas en 2022, 45 participaron del Sistema Único de Admisión (SUA), órgano dependiente del CRUCH que ha estado en funcionamiento desde el año 2013 y que determina un mecanismo integrado, simultáneo, objetivo y transparente de admisión a la educación superior selectiva [@barrientos2019].
+
+Como se puede inferir, el objetivo del SUA es seleccionar candidatos/as, para lo cual se utilizan *factores de selección* cuyos puntajes se han estandarizado en una escala común que va de 150 a 850 puntos. Los más importantes son el NEM (Notas de Enseñanza Media), el Ranking (posición relativa del estudiante en su contexto educativo), y las pruebas obligatorias de admisión que miden los conocimientos en matemáticas y lenguaje.
+
+Durante el proceso de admisión, cada postulante tiene un puntaje para cada factor de admisión. Por su parte, los programas de las universidades participantes del SUA tienen ponderaciones que pueden asignar con relativa autonomía a estos factores. Para cada postulación, el estudiante tiene un puntaje compuesto de postulación (puntaje NEM * ponderación NEM del programa + otros puntajes*otros pesos) que lo posiciona en determinado lugar de la lista de postulantes a ese programa. Según las preferencias del estudiante, puntaje compuesto y vacantes disponibles, será seleccionado/a y podrá matricularse en el programa escogido.
+
+## Características del SUA 2022
+
+- Distintas fechas de rendición (6-7/12, 9-10/12 )
+- Priorización curricular debido a la pandemia
+- Cambios en las Pruebas de Transición (PDT)
+
 ## Admisión: ¿mérito o reproducción de desigualdades?
-## Evidencias de investigación
+
+La segmentación socioeconómica es una realidad transversal en la educación chilena. Si bien diversas evidencias de investigación han reportado diferencias significativas entre estudiantes según sus características territoriales, demográficas y socioeconómicas desde el proceso de admisión hasta el egreso de la educación superior, es difícil aislar estos hallazgos de la forma en que está funcionando el sistema educativo como un todo.
+
+La segmentación socioeconómica y las distintas formas de segregación están afectan la trayectoria escolar y de formación profesional de varios estudiantes. Por esto, la neutralidad y objetividad del SUA está continuamente en debate. La pregunta sobre si el SUA efectivamente ofrece unas oportunidades comparables a todos/as los y las estudiantes de ingresar a la educación superior selectiva sigue abierta, y los estudios centrados en el impacto o rol de variables socioeconómicas sobre los resultados de admisión son un aporte, cuando menos, al rechazo de estos supuestos.
+
+
 ## Pregunta y objetivo de investigación
+
+De acuerdo a lo mencionado, la pregunta de interés para nuestro estudio es:
 
 - ¿*Cuál es el efecto directo e indirecto que los predictores socioeconómicos de interés tienen sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022*? 
 
-Por tanto, el objetivo de esta investigación es **estimar/analizar los efectos directos e indirectos de los predictores socioeconómicos de interés sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022 a través de un modelo estadístico multivariante**.
+Por tanto, el objetivo de esta investigación es:
+
+**estimar/analizar los efectos directos e indirectos de los predictores socioeconómicos de interés sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022 a través de un modelo estadístico multivariante**.
 
 # Metodología
 
