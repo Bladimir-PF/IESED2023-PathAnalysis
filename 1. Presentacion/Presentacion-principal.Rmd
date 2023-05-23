@@ -485,6 +485,14 @@ Por último, el modelo también provee los R^2 de los factores académicos, los 
 
 - Los predictores socioeconómicos fueron significativamente estadísticos en la mayoría de análisis bivariados y multivariantes, incrementando los niveles de rendimiento promedio y las probabilidades de selección cuanto más favorable el nivel de ingresos percápita de la familia y los recursos educativos del padre y/o la madre.
 
+# Cosas por revisar
+
+- cómo corregir los errores estandar de las variables a nivel 2 si es que son agregadas como predictores
+- colinearidad con y sin ranking
+- khb in stata (Average partial effect) / in r is margins
+- estandarizacion del ranking con las tablas del DEMRE
+- incluir variables de nivel 2 como grupo de comparacion (grouping = SECTOR)
+
 # Bonus: sitios para aprender a utilizar `R` 
 
 Gracias al profesor Ariel Aloe por resumir estos recursos: 
