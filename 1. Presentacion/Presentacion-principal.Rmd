@@ -58,14 +58,14 @@ Durante el proceso de admisión, cada postulante tiene un puntaje para cada fact
 
 La segmentación socioeconómica es una realidad transversal en la educación chilena. Si bien diversas evidencias de investigación han reportado diferencias significativas entre estudiantes según sus características territoriales, demográficas y socioeconómicas desde el proceso de admisión hasta el egreso de la educación superior, es difícil aislar estos hallazgos de la forma en que está funcionando el sistema educativo como un todo.
 
-La segmentación socioeconómica y las distintas formas de segregación están afectan la trayectoria escolar y de formación profesional de varios estudiantes. Por esto, la neutralidad y objetividad del SUA está continuamente en debate. La pregunta sobre si el SUA efectivamente ofrece unas oportunidades comparables a todos/as los y las estudiantes de ingresar a la educación superior selectiva sigue abierta, y los estudios centrados en el impacto o rol de variables socioeconómicas sobre los resultados de admisión son un aporte, cuando menos, al rechazo de estos supuestos.
+La segmentación socioeconómica y las distintas formas de segregación afectan la trayectoria escolar y formación profesional de varios estudiantes. Por esto, la neutralidad y objetividad del SUA está continuamente en debate. La pregunta sobre si el SUA efectivamente ofrece unas oportunidades comparables a todos/as los y las estudiantes de ingresar a la educación superior selectiva sigue abierta, y los estudios centrados en el impacto o rol de variables socioeconómicas sobre los resultados de admisión son un aporte, cuando menos, al rechazo de estos supuestos.
 
 
 ## Pregunta y objetivo de investigación
 
 De acuerdo a lo mencionado, la pregunta de interés para nuestro estudio es:
 
-¿*Qué efecto tienen los predictores socioeconómicos de interés tienen sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva el año 2022*? 
+¿*Qué efecto tienen los predictores socioeconómicos de interés sobre los distintos resultados de aplicación en el proceso de admisión a la educación superior selectiva del año 2022*? 
 
 Por tanto, el objetivo de esta investigación es:
 
@@ -75,15 +75,15 @@ Por tanto, el objetivo de esta investigación es:
 
 ## Diseño
 
-Este es un estudio cuantitativo de diseño transversal, centrado en los resultados del proceso de admisión a la educación superior selectiva del año 2022. Además del análisis descriptivo de los factores académicos de admisión (NEM, Ranking, y pruebas de admisión en matemáticas y lenguaje), se estimó un modelo de senderos, o path analysis, para analizar el efecto que variables socioeconómicas de interés (estudiante primera generación y quintil de ingresos percápita por familia) sobre distintos resultados de admisión.
+Este es un estudio cuantitativo de diseño transversal, centrado en los resultados del proceso de admisión a la educación superior selectiva del año 2022. Además del análisis descriptivo de los factores académicos de admisión (NEM, Ranking, y pruebas de admisión en matemáticas y lenguaje), se estimó un modelo de senderos, o path analysis, para analizar el efecto que variables socioeconómicas de interés tiene sobre las distintas condiciones o resultados de las postulaciones.
 
 ## Datos
 
-Los datos corresponden al proceso de admisión del año 2022, los cuales fueron solicitados al DEMRE. A diferencia de procesos anteriores, el DEMRE ahora facilita un único repositorio con la información de las distintas etapas del proceso.
+Los datos corresponden al proceso de admisión del año 2022, los cuales fueron solicitados al DEMRE a través de su [portal de bases de datos](https://demre.cl/portales/portal-bases-datos). Cabe destacar que a diferencia de procesos anteriores, el DEMRE ahora facilita un único repositorio con la información de las distintas etapas del proceso.
 
 Entre las variables extraídas de la fuente original se encuentran los puntajes en las pruebas de admisión en lenguaje y matemáticas, puntajes derivados de las notas de enseñanza media (NEM y Ranking), educación del padre y la madre, decil de ingresos percápita por familia, y situación de las postulaciones del estudiante.
 
-```{r, include=FALSE}
+```{r}
 library(dplyr)
 
 # Database
@@ -166,35 +166,35 @@ dat4 <- dat4 %>% mutate(
 dat3_5 <- data.frame(dat3[,c(1:8,19:30)])
 ```
 
-```{r}
+```{r, bases}
 head(dat3_5,10)
 head(dat4,10)
 ```
-Como pueden darse cuenta, solo dos variables se consideraron como predictores de interés. En el caso de las variables de caracterización de los colegios, no se agregaron por conveniencia, ya que al incluirlos necesitaríamos ajustar el modelo a la estructura anidada de los datos para identificar adecuamente el rol de cada predictor en distintos niveles (al interior y entre colegios) y no tener errores estándar sesgados en los efectos de nivel 1. Además, como la pregunta de investigación involucra aspectos sociodemográficos, no se agregaron variables demográficas.
+Como pueden darse cuenta, solo dos variables se consideraron como predictores de interés. En el caso de las variables de caracterización de los colegios, no se agregaron por conveniencia, ya que al incluirlos necesitaríamos ajustar el modelo a la estructura anidada de los datos para identificar adecuamente el rol de cada predictor en distintos niveles (al interior y entre colegios) y no tener errores estándar sesgados en los efectos de nivel 1. Además, como la pregunta de investigación involucra aspectos socioeconómicas, no se agregaron variables demográficas.
 
 ## Muestra
 
-Originalmente, existen 281.457 registros en la base de datos del proceso de admisión 2022 provista por el DEMRE. Sin embargo, de acuerdo con el objetivo de investigación, se aplicaron 3 filtros a la base de datos original:
+Originalmente existen 281.457 registros en la base de datos del proceso de admisión 2022 provista por el DEMRE. Sin embargo, de acuerdo con el objetivo de investigación, se aplicaron 3 filtros a la base de datos original:
 
-1. Egresados/as de enseñanza regular (`n = 258.728`)
+1. Egresados/as de enseñanza media técnica o humanista regular (`n = 258.728`)
 2. Graduados/as en 2021 (`n = 172.346`)
 3. Puntajes válidos en los factores académicos de selección (`n = 150.811`)
 
-Con esto, pretendemos fijar un perfil de estudiante: aquel estudiante recién egresado de la educación secundaria con cuyos contenidos se diseñan los exámenes de admisión y que tiene los puntajes necesarios para la construcción del puntaje ponderado que se utiliza para postular a cada programa universitario.
+Con esto pretendemos definir la unidad de observación: aquel estudiante recién egresado de la educación secundaria, expuesto a los contenidos utilizados para diseñar los exámenes de admisión y que tiene los puntajes necesarios para la construcción del puntaje compuesto para postular a cada programa selectivo.
 
 ## Procedimiento
 
 En primer lugar, se realizaron análisis descriptivos de los puntajes en los factores académicos de admisión según las variables de caracterización socioeconómicas escogidas.
 
-Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con las mediaciones de los factores académicos (estimando los tradicionales efectos `a`, `b` y `c'`), y otro sin estos efectos (las regresiones entre los mediadores y el resultado se fija en `@0`). Esto permitiría luego comparar los efectos c (incondicionales) con los c' (condicionales), sin embargo, las formulas disponibles para hacer esto [ver ecuación 11.6 en @mackinnon2012introduction] consideran solo un mediador, mientras que en nuestro análisis tenemos 4. Por esto, los efectos indirectos se presentan con la clásica opción de a*b (efectos no estandarizados).
+Luego, se estimaron dos modelos de senderos en el software Mplus v.8.8, uno con las mediaciones de los factores académicos (estimando los tradicionales efectos `a`, `b` y `c'`), y otro sin estos mediaciones (para obtener regresiones incondicionales). Esto permitiría luego comparar los efectos $c$ (incondicionales) con los $c'$ (condicionales), sin embargo, las formulas disponibles para hacer esto [ver ecuación 11.6 en @mackinnon2012introduction] consideran solo un mediador, mientras que en nuestro análisis tenemos 4. Por esto, los efectos indirectos se presentan con la clásica opción de a*b (efectos no estandarizados).
 
-**Logica del modelo**
+El detalle de las variables incluidas en el análisis se encuentra en la Tabla 1. Como es costumbre en los análisis de regresión, y ya que su escala original era muy amplia, los factores académicos fueron centrados en los 550 puntos y luego divididos por 100. 
 
-![Note.](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
+![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Table%201.png?raw=true)
 
-El análisis de senderos es un modelo de regresión lineal múltiple (o logística multinomial) con esteroides. Es un conjunto de regresiones simultáneas que permite revisar si, en adición al efecto principal entre los predictores exógenos y la variable dependiente, existen efectos indirectos entre el predictor y el resultado que no pueden ser capturado por los modelos de regresión convencionales.
+*El análisis de senderos es un modelo de regresión lineal múltiple (o logística multinomial) con esteroides (o buen marketing)*. Es un conjunto de regresiones simultáneas que permite revisar si es que en adición al efecto principal entre el predictor (exógeno o endógeno) y la variable dependiente existen efectos indirectos a través de un mediador que no pueden ser capturado por los modelos de regresión convencionales.
 
-En nuestro caso, los predictores exógenos son las características socioeconómicas FIRST_G y FAMILY_INCOME, con los factores académicos actuando como mediadores. Los modelos se estimaron bajo Máxima Verosimilitud con errores estándar robustos (`MLR`), utilizando una distribución condicional `multinomial` para los residuos y función de enlace logit de referencia (`baseline logit`).
+En nuestro caso, los predictores exógenos son las características socioeconómicas FIRST_G y FAMILY_INCOME, con los factores académicos (NEM, RKG, LANG, MATH) actuando como mediadores. Los modelos se estimaron bajo Máxima Verosimilitud con errores estándar robustos (`MLR`), utilizando una distribución condicional `multinomial` para los residuos y la función de enlace logit generalizado (`generalized logit`).
 
 En síntesis, estamos tratando de estimar algo así:
 
@@ -207,6 +207,8 @@ Con un modelo que calcula esto:
 Y que luce así:
 
 ![Hecho en SEMBuilder, STATA](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Figure%202.png?raw=true)
+
+El modelo se convertirá en 3 submodelos, cada uno estimando la probabilidad de una categoría K - 1 respecto a K. Por conveniencia, hemos escogido la tercera categoría, postular pero no ser seleccionado/a, como referencia (K). 
 
 # Resultados
 
@@ -445,17 +447,17 @@ plot5
 
 En general, a medida que las condiciones socioeconómicas mejoran, también lo hacen los puntajes promedio en los factores de admisión. Incluso el Ranking de notas muestra este comportamiento disímil entre grupos de estudiantes.
 
-A continuación, se muestran los resultados de los análisis de senderos. En primero lugar, los efectos de los predictores endógenos y exógenos sobre la probabilidad de admisión en el proceso 2022. En la Tabla 2.1 se muestra un modelo donde la referencia de la variable dependiente es *aplicar pero no ser seleccionado/a*, por lo que cada pendiente corresponde al efecto del predictor sobre el logit de la probabilidad de alguna categoría distinta a **K** respecto a **K**.
+A continuación, se muestran los resultados de los análisis de senderos. En primer lugar, los efectos de los predictores endógenos y exógenos sobre la probabilidad de admisión en el proceso 2022. En la Tabla 2.1 se muestra un modelo donde la referencia de la variable dependiente es *aplicar pero no ser seleccionado/a*, por lo que cada pendiente corresponde al efecto del predictor sobre el logit de la probabilidad de alguna categoría distinta a **K** respecto a **K**.
 
-Por ejemplo, ADM#1 está estimando la probabilidad de no postular respecto a postular y no ser seleccionado/a. De los factores académicos, se puede observar que los puntajes en lenguaje y matemáticas son especialmente relevantes en la decisión de postular, mientras que a medida que los ingresos económicos percápita de la familia incrementan, se vuelve más probable no postular que postular y arriesgarse a no ser seleccionado/a.
+Por ejemplo, $ADM#1$ está estimando la probabilidad de **no postular** respecto a **postular y no ser seleccionado/a**. De los factores académicos, se puede observar que los puntajes en lenguaje y matemáticas son especialmente relevantes en la decisión de postular, mientras que a medida que los ingresos económicos percápita de la familia incrementan, se vuelve más probable no postular que postular y arriesgarse a no ser seleccionado/a.
 
 ![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20app%20status.png?raw=true)
 
-Por otro lado, ADM#3 está estimando la probabilidad de postular y ser seleccionado/a versus postular y no ser seleccionado/a. En este submodelo, los factores académicos juegan un rol positivo, como es de esperar, incrementando la probabilidad de admisión. En cuanto a los predictores socioeconómicos, ser estudiante primera generación se traduce en una desventaja no significativa para la selección, mientras que  provenir de una familia del primer quintil de ingresos económicos percápita sí es una desventaja significativa.
+Por otro lado, $ADM#3$ está estimando la probabilidad de **postular y ser seleccionado/a** versus **postular y no ser seleccionado/a**. En este submodelo, los factores académicos juegan un rol positivo, como es de esperar, incrementando la probabilidad de admisión. En cuanto a los predictores socioeconómicos, ser estudiante primera generación se traduce en una desventaja no significativa para la selección, mientras que  provenir de una familia del primer quintil de ingresos económicos percápita sí es una desventaja estadísticamente significativa.
 
 Lo interesante de la Tabla 2.1 es que los efectos de los predictores exógenos (los conocidos efectos `c'`) corresponden a las pendientes de regresión, o comparación entre grupos, ajustadas por los factores académicos. Es decir, que estiman el efecto de los atributos socioeconómicos y la admisión luego de remover el efecto o relación que existe entre los factores académicos y las diferentes resultados de aplicación. Esto es importante, especialmente en ADM#3 y el rol del quintil económico de ingresos, ya que permite identificar mejor el efecto de los predictores sobre la probabilidad de admisión.
 
-Ahora, en términos de rendimiento en los factores académicos, se observan similares resultados a los vistos en los gráficos de caja anteriormente. En general, los estudiantes primera generación alcanzarían, en promedio, entre 30 y 50 puntos menos que los estudiantes con algún padre/madre que llegó a la educación superior. 
+Ahora, en términos de rendimiento en los factores académicos, se observan similares resultados a los vistos en los gráficos de caja anteriormente. En general, los estudiantes primera generación alcanzarían, en promedio, entre 30 y 50 puntos menos que los estudiantes con algún padre/madre que llegó a la educación superior. En cuanto al efecto de los ingresos percápita de las familias, las diferencias entre estudiantes de primer y quinto quintil son especialmente notorias, con brechas estimadas de entre 40 y 46 puntos en promedio en lenguaje y matemáticas respectivamente.
 
 ![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20predicted%20achievement%20in%20the%20academic%20factors.png?raw=true)
 
@@ -463,17 +465,21 @@ Algo común en los análisis de senderos es la prueba de los efectos indirectos,
 
 ![Tomado de MacKinnon (2008,p.307)](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/c%20corrected.png?raw=true)
 
-Tendiendo esto en consideración, la Tabla 3 muestra los efectos indirectos del modelo (a * b sin estandarizar), la mayoría de los cuales resulta significativo. A diferencia de los resultados anteriores, la interpretación de estos coeficientes no es sencilla, pues tanto los números como su dirección no se pueden interpretar directamente debido a cómo fueron calculadas. Lo que sí podemos decir con estos efectos es que el rol o impacto de las variables socioeconómicas de interés no tan solo es directo y aun controlando por los factores académicos del proceso de admisión, sino que también son importantes en el rendimiento de cada uno de los factores académicos y su posterior efecto sobre la situación de la aplicación.
+Tendiendo esto en consideración, la Tabla 3 muestra los efectos indirectos del modelo (a * b sin estandarizar), la mayoría de los cuales resulta significativo. A diferencia de los resultados anteriores, la interpretación de estos coeficientes no es sencilla, pues tanto los números como su dirección no se pueden interpretar directamente debido a cómo fueron calculadas. Lo que sí podemos decir sobre estos efectos es que muestran el triple rol de las variables socioeconómicas en el proceso de admisión:
+
+1. sobre la situación de las postulaciones aun controlando por los factores académicos (`c'`)
+2. sobre los niveles de rendimiento en los factores académicos (`a`)
+3. sobre la situación de postulación a través de cada uno de los factores académicos (`a*b`)
 
 ![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/results%20-%20indirect%20effects.png?raw=true)
 
-Por último, el modelo también provee los r cuadrados de los predictores académicos, los cuales pese a parecer pequeños, no debemos olvidar que solo consideran dos variables socioeconómicas. Especialmente para el caso de los exámenes de admisión, los predictores exógenos alcanzan a explicar aproximadamente un 10% de su varianza.
+Por último, el modelo también provee los R^2 de los factores académicos, los cuales pese a parecer pequeños, no debemos olvidar que solo consideran dos variables socioeconómicas. Especialmente para el caso de los exámenes de admisión, los predictores exógenos alcanzan a explicar aproximadamente un 10% de su varianza.
 
 ![](https://github.com/Bladimir-PF/PresentacionIESED2023/blob/main/4.%20Tablas%20y%20figuras/Results%20-%20rsquare's.png?raw=true)
 
 # Conclusiones (preliminares)
 
-- Hay un gran contingente de estudiantes que decide no postular a los programas selectivos, entre los cuales sería importante conocer las razones y si el próximo año participan y cuáles son sus preferencias. Hasta ahora, según los resultados, las probabilidad de no postular incrementan entre los estudiantes de familias de mayores quintiles de ingresos percápita en lugar de postular y no ser seleccionado/a.
+- Hay un gran contingente de estudiantes que decide no postular a los programas selectivos, entre los cuales sería importante conocer las razones y si el próximo año participan y cuáles son sus preferencias. Hasta ahora, según los resultados, las probabilidades de no postular incrementan entre los estudiantes de familias de mayores quintiles de ingresos percápita en lugar de postular y no ser seleccionado/a.
 
 - Los factores académicos, en especial los exámenes de admisión, tienen un rol positivo sobre la probabilidad de postular y de admisión.
 
